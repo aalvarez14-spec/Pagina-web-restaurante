@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestionar pedidos | Fernando Parrilla</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@600&amp;display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --carbono-oscuro: #0B0B0B;
+      --carbono-mate: #121212;
+      --carbono-superficie: #1E1E1E;
+      --oro-viejo: #D4AF37;
+      --texto-claro: #F5F5F5;
+      --texto-mutado: #8A8A8A;
+      --color-pendiente: #D4AF37;
+      --color-recibido: #3498DB;
+      --color-cocina: #E67E22;
+      --color-enviado: #B388EB;
+      --color-confirmado: #2ECC71;
+      --color-rechazado: #FF6B5E;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
+    body {
+      margin: 0;
+      display: flex;
+      min-height: 100vh;
+      background-color: var(--carbono-oscuro);
+      color: var(--texto-claro);
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      line-height: 1.5;
+    }
+    h1, h2, p, dl, dd, ul { margin: 0; }
+    button, select, input { font: inherit; color: inherit; }
+    :focus-visible { outline: 2px solid var(--oro-viejo); outline-offset: 2px; }
+
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .skip-link { position: absolute; left: -9999px; top: 8px; z-index: 100; background: var(--oro-viejo); color: #111; padding: 8px 14px; border-radius: 4px; font-weight: 600; }
+    .skip-link:focus { left: 8px; }
+
+    /* ───── Barra lateral ───── */
+    aside {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background-color: var(--carbono-mate);
+      border-right: 1px solid rgba(212, 175, 55, 0.1);
+      display: flex;
+      flex-direction: column;
+      padding: 30px 20px;
+    }
+    .brand { font-family: 'Playfair Display', Georgia, serif; color: var(--oro-viejo); font-size: 1.6rem; margin-bottom: 40px; text-align: center; }
+    .nav-menu { display: flex; flex-direction: column; gap: 10px; }
+    .nav-item {
+      position: relative;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
+      padding: 14px 18px; color: var(--texto-mutado); text-decoration: none;
+      border-radius: 6px; border-left: 3px solid transparent;
+      font-size: 0.95rem; font-weight: 500;
+    }
+    .nav-item:hover { color: var(--texto-claro); }
+    .nav-item[aria-current="page"] { color: var(--oro-viejo); background-color: var(--carbono-superficie); border-left-color: var(--oro-viejo); }
+    .nav-count { min-width: 22px; padding: 1px 7px; border-radius: 11px; background: var(--oro-viejo); color: var(--carbono-oscuro); font-size: 0.75rem; font-weight: 700; text-align: center; }
+
+    /* ───── Contenido ───── */
+    main { flex: 1; min-width: 0; padding: 40px; }
+    main:focus { outline: none; }
+    .dashboard-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 20px; }
+    .dashboard-header h1 { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; font-size: 1.8rem; }
+    .header-status { display: flex; align-items: center; gap: 14px; font-size: 0.9rem; }
+    .chip-demo { border: 1px solid rgba(212, 175, 55, 0.35); color: var(--oro-viejo); padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; }
+    .conexion.online { color: var(--color-confirmado); }
+    .conexion.offline { color: var(--color-rechazado); }
+
+    .toolbar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 24px; margin-bottom: 24px; }
+    .filtros { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filtro {
+      min-height: 40px; padding: 8px 14px; border-radius: 20px; cursor: pointer;
+      background: var(--carbono-superficie); border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--texto-mutado); font-size: 0.88rem; font-weight: 500;
+    }
+    .filtro:hover { color: var(--texto-claro); }
+    .filtro[aria-pressed="true"] { background: var(--oro-viejo); border-color: var(--oro-viejo); color: var(--carbono-oscuro); font-weight: 600; }
+    .filtro .n { margin-left: 6px; opacity: 0.8; }
+    .rango-fechas { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
+    .campo { display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; color: var(--texto-mutado); }
+    .campo input, .campo select {
+      min-height: 40px; padding: 8px 10px; border-radius: 4px; color-scheme: dark;
+      background: var(--carbono-superficie); border: 1px solid rgba(212, 175, 55, 0.3); color: var(--texto-claro);
+    }
+
+    .lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 20px; align-items: start; }
+    .lista:focus { outline: none; }
+    .vacio { grid-column: 1 / -1; padding: 40px 16px; text-align: center; color: var(--texto-mutado); border: 1px dashed rgba(255, 255, 255, 0.1); border-radius: 8px; }
+
+    /* ───── Tarjetas de pedido y reserva ───── */
+    .ticket { background-color: var(--carbono-superficie); border-radius: 8px; border-left: 3px solid transparent; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+    .ticket.requiere-accion { border-left-color: var(--oro-viejo); }
+    .row-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .entity-id { font-size: 0.85rem; font-weight: 700; }
+
+    .status-badge { font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; }
+    .status-badge.pendiente { background-color: rgba(212, 175, 55, 0.15); color: var(--color-pendiente); }
+    .status-badge.recibido { background-color: rgba(52, 152, 219, 0.15); color: var(--color-recibido); }
+    .status-badge.en_preparacion { background-color: rgba(230, 126, 34, 0.15); color: var(--color-cocina); }
+    .status-badge.enviado, .status-badge.reprogramada { background-color: rgba(179, 136, 235, 0.15); color: var(--color-enviado); }
+    .status-badge.entregado, .status-badge.confirmada { background-color: rgba(46, 204, 113, 0.15); color: var(--color-confirmado); }
+    .status-badge.rechazado, .status-badge.cancelada { background-color: rgba(255, 107, 94, 0.15); color: var(--color-rechazado); }
+
+    .datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px 16px; }
+    .datos > div { min-width: 0; }
+    .datos dt { font-size: 0.78rem; color: var(--texto-mutado); }
+    .datos dd { font-size: 0.92rem; font-weight: 600; overflow-wrap: anywhere; }
+    .datos dd.monto { color: var(--oro-viejo); }
+    .datos a, .detalle-cuerpo a { color: inherit; text-underline-offset: 3px; }
+
+    .detalle { background-color: var(--carbono-mate); border-radius: 6px; }
+    .detalle summary { cursor: pointer; padding: 12px 14px; font-size: 0.9rem; font-weight: 500; }
+    .detalle-cuerpo { display: flex; flex-direction: column; gap: 10px; padding: 0 14px 14px; font-size: 0.9rem; }
+    .platos { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+    .platos li { display: flex; justify-content: space-between; gap: 12px; }
+    .obs { display: block; font-size: 0.82rem; color: var(--texto-mutado); }
+    .no-disponible { color: var(--color-rechazado); }
+    .aviso { padding: 10px 12px; border-radius: 6px; font-size: 0.88rem; color: var(--color-rechazado); background: rgba(255, 107, 94, 0.08); border: 1px solid rgba(255, 107, 94, 0.4); }
+
+    .actions-area { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 10px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 14px; }
+    .actions-area .nota { margin-right: auto; font-size: 0.85rem; color: var(--texto-mutado); }
+    .select-status-admin { min-height: 40px; padding: 6px 10px; border-radius: 4px; font-size: 0.85rem; background-color: var(--carbono-superficie); border: 1px solid rgba(212, 175, 55, 0.3); color: var(--texto-claro); color-scheme: dark; }
+
+    .btn { min-height: 40px; padding: 0 16px; border-radius: 6px; cursor: pointer; font-size: 0.88rem; font-weight: 600; background: var(--oro-viejo); border: 1px solid var(--oro-viejo); color: #111; }
+    .btn:hover { filter: brightness(1.08); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; filter: none; }
+    .btn-sec { background: transparent; color: var(--oro-viejo); }
+    .btn-peligro { background: transparent; border-color: rgba(255, 107, 94, 0.5); color: var(--color-rechazado); }
+    .btn-peligro-solido { background: var(--color-rechazado); border-color: var(--color-rechazado); color: #1A0D0B; }
+
+    /* ───── Avisos y diálogos ───── */
+    .toast-region { position: fixed; right: 24px; bottom: 24px; z-index: 50; display: flex; flex-direction: column; gap: 10px; max-width: min(420px, calc(100vw - 32px)); }
+    .toast { padding: 12px 16px; border-radius: 6px; font-size: 0.9rem; background: var(--carbono-superficie); border: 1px solid rgba(212, 175, 55, 0.4); border-left: 4px solid var(--color-confirmado); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); animation: entra 0.2s ease-out; }
+    .toast.aviso { border-left-color: var(--oro-viejo); }
+    .toast.error { border-color: rgba(255, 107, 94, 0.5); border-left-color: var(--color-rechazado); }
+    @keyframes entra { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    dialog { width: min(440px, calc(100vw - 32px)); padding: 24px; border-radius: 8px; background: var(--carbono-superficie); color: var(--texto-claro); border: 1px solid rgba(212, 175, 55, 0.3); }
+    dialog::backdrop { background: rgba(0, 0, 0, 0.7); }
+    dialog h2 { margin-bottom: 10px; font-family: 'Playfair Display', Georgia, serif; font-weight: 600; font-size: 1.3rem; color: var(--oro-viejo); }
+    dialog p { margin-bottom: 18px; }
+    .dlg-campos { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
+    .dlg-acciones { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
+    .error-form { margin-bottom: 14px; font-size: 0.88rem; color: var(--color-rechazado); }
+
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      aside { position: static; width: 100%; height: auto; flex-direction: row; align-items: center; gap: 16px; padding: 12px 16px; border-right: 0; border-bottom: 1px solid rgba(212, 175, 55, 0.1); }
+      .brand { margin: 0; font-size: 1.2rem; text-align: left; white-space: nowrap; }
+      .nav-menu { flex: 1 1 auto; min-width: 0; flex-direction: row; gap: 6px; overflow-x: auto; }
+      .nav-item { white-space: nowrap; padding: 10px 14px; border-left: 0; border-bottom: 3px solid transparent; border-radius: 6px 6px 0 0; }
+      .nav-item[aria-current="page"] { border-bottom-color: var(--oro-viejo); }
+      main { padding: 20px 16px; }
+      .lista { grid-template-columns: 1fr; }
+      .toast-region { left: 16px; right: 16px; bottom: 16px; max-width: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <aside>
+    <div class="brand">Orearte Parrilla</div>
+    <nav class="nav-menu" aria-label="Secciones del panel">
+      <a href="#pedidos" class="nav-item" data-vista="pedidos">Gestionar pedidos <span class="nav-count" id="nav-count-pedidos" hidden></span></a>
+      <a href="#reservas" class="nav-item" data-vista="reservas">Gestionar reservas <span class="nav-count" id="nav-count-reservas" hidden></span></a>
+      <a href="#menu" class="nav-item" data-vista="menu">Gestionar menú</a>
+      <a href="#info" class="nav-item" data-vista="info">Información del restaurante</a>
+    </nav>
+  </aside>
+
+  <main id="contenido" tabindex="-1">
+    <header class="dashboard-header">
+      <h1 id="titulo-vista">Gestionar pedidos</h1>
+      <div class="header-status">
+        <span class="chip-demo">Datos simulados</span>
+        <span class="conexion" id="estado-conexion" title="Estado de la conexión a internet"></span>
+      </div>
+    </header>
+
+    <noscript><p class="vacio">Esta consola necesita JavaScript para funcionar. Actívalo en tu navegador y recarga la página.</p></noscript>
+
+    <section id="vista-pedidos" class="vista" aria-labelledby="titulo-vista">
+      <div class="toolbar">
+        <div class="filtros" id="filtros-pedidos" role="group" aria-label="Filtrar pedidos por estado"></div>
+      </div>
+      <div class="lista" id="lista-pedidos" tabindex="-1"></div>
+    </section>
+
+    <section id="vista-reservas" class="vista" aria-labelledby="titulo-vista" hidden>
+      <div class="toolbar">
+        <div class="filtros" id="filtros-reservas" role="group" aria-label="Filtrar reservas por estado"></div>
+        <div class="rango-fechas">
+          <label class="campo">Desde <input type="date" id="filtro-desde"></label>
+          <label class="campo">Hasta <input type="date" id="filtro-hasta"></label>
+          <button type="button" class="btn btn-sec" id="limpiar-fechas" hidden>Limpiar fechas</button>
+        </div>
+      </div>
+      <div class="lista" id="lista-reservas" tabindex="-1"></div>
+    </section>
+
+    <section id="vista-menu" class="vista" aria-labelledby="titulo-vista" hidden>
+      <p class="vacio">Aquí el administrador podrá crear, editar, deshabilitar y eliminar platos y categorías. Esta sección aún no está construida.</p>
+    </section>
+
+    <section id="vista-info" class="vista" aria-labelledby="titulo-vista" hidden>
+      <p class="vacio">Aquí el administrador podrá actualizar los horarios, la dirección, el contacto y la descripción del restaurante. Esta sección aún no está construida.</p>
+    </section>
+  </main>
+
+  <div class="toast-region" id="toasts" role="status" aria-live="polite"></div>
+
+  <dialog id="dlg-confirmar" aria-labelledby="dlg-confirmar-titulo">
+    <h2 id="dlg-confirmar-titulo"></h2>
+    <p id="dlg-confirmar-mensaje"></p>
+    <div class="dlg-acciones">
+      <button type="button" class="btn btn-sec" id="dlg-confirmar-volver">Volver</button>
+      <button type="button" class="btn" id="dlg-confirmar-ok">Confirmar</button>
+    </div>
+  </dialog>
+
+  <dialog id="dlg-reprogramar" aria-labelledby="dlg-reprogramar-titulo">
+    <form id="form-reprogramar" novalidate>
+      <h2 id="dlg-reprogramar-titulo">Reprogramar reserva</h2>
+      <p id="rep-resumen"></p>
+      <div class="dlg-campos">
+        <label class="campo">Nueva fecha <input type="date" id="rep-fecha" required></label>
+        <label class="campo">Nueva franja horaria <select id="rep-franja" required></select></label>
+      </div>
+      <p class="error-form" id="rep-error" role="alert" hidden></p>
+      <div class="dlg-acciones">
+        <button type="button" class="btn btn-sec" id="rep-volver">Volver</button>
+        <button type="submit" class="btn">Reprogramar y avisar al cliente</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    (() => {
+      'use strict';
+
+      /* SEGURIDAD: esta consola es un prototipo con datos simulados y sin inicio de sesión.
+         Antes de publicarla, protégela con Firebase Authentication y con reglas de seguridad de
+         Firestore que solo permitan leer y escribir pedidos, reservas y menú a administradores.
+         Ocultar la página desde el navegador no es suficiente. */
+
+      /* ───── 1. Configuración y datos simulados ───── */
+
+      // Pon estas opciones en true para probar las excepciones de los casos de uso.
+      const SIMULAR = { falloGuardado: false, falloNotificacion: false };
+
+      // AJUSTAR: deben coincidir con las franjas del formulario público de reservas.
+      const FRANJAS = ['12:00 PM - 02:00 PM', '02:00 PM - 04:00 PM', '07:00 PM - 09:00 PM'];
+      const CAPACIDAD_MESAS = { tipo_A: 5, tipo_B: 5 };
+      const MESA = { tipo_A: 'tipo A (hasta 4 personas)', tipo_B: 'tipo B (de 5 a 8 personas)' };
+      const tipoMesaPara = (n) => (n >= 1 && n <= 4 ? 'tipo_A' : n >= 5 && n <= 8 ? 'tipo_B' : null);
+
+      const ESTADOS_PEDIDO = { pendiente: 'Pendiente', recibido: 'Recibido', en_preparacion: 'En preparación', enviado: 'Enviado', entregado: 'Entregado', rechazado: 'Rechazado' };
+      const TRANSICIONES_PEDIDO = {
+        pendiente: ['recibido', 'rechazado'],
+        recibido: ['en_preparacion'],
+        en_preparacion: ['enviado'],
+        enviado: ['entregado'],
+        entregado: [],
+        rechazado: []
+      };
+      const NOTIFICA_PEDIDO = new Set(['recibido', 'rechazado', 'enviado']);
+
+      const ESTADOS_RESERVA = { pendiente: 'Pendiente', confirmada: 'Confirmada', reprogramada: 'Reprogramada', cancelada: 'Cancelada' };
+      const TRANSICIONES_RESERVA = {
+        pendiente: ['confirmada', 'reprogramada', 'cancelada'],
+        confirmada: ['reprogramada', 'cancelada'],
+        reprogramada: ['confirmada', 'reprogramada', 'cancelada'],
+        cancelada: []
+      };
+
+      const GRUPOS_PEDIDO = {
+        pendientes: { etiqueta: 'Por confirmar', estados: ['pendiente'] },
+        en_curso: { etiqueta: 'En curso', estados: ['recibido', 'en_preparacion', 'enviado'] },
+        historial: { etiqueta: 'Historial', estados: ['entregado', 'rechazado'] }
+      };
+      const GRUPOS_RESERVA = {
+        por_atender: { etiqueta: 'Por atender', estados: ['pendiente', 'reprogramada'] },
+        confirmadas: { etiqueta: 'Confirmadas', estados: ['confirmada'] },
+        canceladas: { etiqueta: 'Canceladas', estados: ['cancelada'] },
+        todas: { etiqueta: 'Todas', estados: null }
+      };
+
+      const VISTAS = { pedidos: 'Gestionar pedidos', reservas: 'Gestionar reservas', menu: 'Gestionar menú', info: 'Información del restaurante' };
+
+      const pad = (n) => String(n).padStart(2, '0');
+      const fechaISO = (offsetDias = 0) => {
+        const d = new Date();
+        d.setDate(d.getDate() + offsetDias);
+        return `d.getFullYear()-{pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+      };
+      const hace = (minutos) => new Date(Date.now() - minutos * 60000).toISOString();
+
+      const CARTA = {
+        'Carne oreada':          { precio: 44900, disponible: true },
+        'Pechuga a la parrilla': { precio: 36900, disponible: true },
+        'Pescado a la parrilla': { precio: 41900, disponible: false }, // agotado: sirve para probar la alerta de platos no disponibles
+        'Papa criolla':          { precio: 8900,  disponible: true },
+        'Limonada de coco':      { precio: 11600, disponible: true }
+      };
+      const item = (nombre, cantidad, observacion = '') => ({ nombre, cantidad, precio: CARTA[nombre].precio, observacion });
+
+      const REPARTIDORES = [
+        { id: 'REP_1', nombre: 'Carlos Ruiz', telefono: '300 000 0011', disponible: false }, // lleva el pedido PED_77110
+        { id: 'REP_2', nombre: 'Daniela Mora', telefono: '300 000 0012', disponible: true },
+        { id: 'REP_3', nombre: 'Julián Pardo', telefono: '300 000 0013', disponible: true }
+      ];
+
+      // Con Firestore, estos arreglos se llenan con onSnapshot(...) y cada cambio llama a renderActual().
+      const pedidos = [
+        { id: 'PED_77120', cliente: 'Juan Gómez', telefono: '300 000 0001', direccion: 'Cra 15 # 85-20, Apto 402', referencias: 'Edificio de ladrillo, portería 24 horas',
+          items: [item('Carne oreada', 2), item('Pechuga a la parrilla', 1), item('Limonada de coco', 2)], estado: 'en_preparacion', repartidorId: null, creado_en: hace(35) },
+        { id: 'PED_77131', cliente: 'María Fernanda Ortiz', telefono: '300 000 0002', direccion: 'Calle 9 # 21-45, Casa 3', referencias: 'Portón negro; el timbre no funciona, llamar al llegar',
+          items: [item('Pescado a la parrilla', 1, 'Sin ají'), item('Papa criolla', 1), item('Limonada de coco', 1)], estado: 'pendiente', repartidorId: null, creado_en: hace(6) },
+        { id: 'PED_77133', cliente: 'Andrés Rojas', telefono: '300 000 0003', direccion: 'Av. 30 # 12-08, Torre B, Apto 1103', referencias: '',
+          items: [item('Carne oreada', 1, 'Término tres cuartos'), item('Papa criolla', 2)], estado: 'pendiente', repartidorId: null, creado_en: hace(2) },
+        { id: 'PED_77110', cliente: 'Camila Vargas', telefono: '300 000 0004', direccion: 'Cra 27 # 48-33', referencias: 'Casa esquinera de dos pisos',
+          items: [item('Pechuga a la parrilla', 2), item('Limonada de coco', 2)], estado: 'enviado', repartidorId: 'REP_1', creado_en: hace(55) },
+        { id: 'PED_77098', cliente: 'Laura Díaz', telefono: '300 000 0005', direccion: 'Calle 52 # 7-19, Apto 201', referencias: '',
+          items: [item('Carne oreada', 1), item('Limonada de coco', 1)], estado: 'entregado', repartidorId: 'REP_3', creado_en: hace(190) },
+        { id: 'PED_77090', cliente: 'Pedro Salcedo', telefono: '300 000 0006', direccion: 'Cra 8 # 33-02', referencias: '',
+          items: [item('Pescado a la parrilla', 2)], estado: 'rechazado', repartidorId: null, creado_en: hace(300) }
+      ];
+
+      const reserva = (id, cliente, telefono, personas, fecha, franja, estado, minutosDesdeCreacion) =>
+        ({ id, cliente, telefono, personas, fecha, franja, tipo_mesa: tipoMesaPara(personas), estado, creado_en: hace(minutosDesdeCreacion) });
+      const reservas = [
+        reserva('RES_98231', 'Fernando Pérez', '300 000 0021', 4, fechaISO(0), FRANJAS[2], 'confirmada', 400),
+        reserva('RES_98240', 'Natalia Gómez', '300 000 0022', 6, fechaISO(1), FRANJAS[0], 'pendiente', 45),
+        reserva('RES_98244', 'Sergio Marín', '300 000 0023', 2, fechaISO(2), FRANJAS[2], 'pendiente', 20),
+        reserva('RES_98250', 'Diana Cárdenas', '300 000 0024', 3, fechaISO(1), FRANJAS[0], 'pendiente', 10),
+        reserva('RES_98215', 'Hernán Duarte', '300 000 0025', 8, fechaISO(3), FRANJAS[2], 'confirmada', 1500),
+        reserva('RES_98199', 'Paula Rincón', '300 000 0026', 5, fechaISO(1), FRANJAS[1], 'cancelada', 2900)
+      ];
+
+      /* ───── 2. Persistencia y notificaciones (simuladas) ───── */
+
+      const pausa = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      async function persistir(coleccion, id, cambios) {
+        await pausa(120);
+        if (SIMULAR.falloGuardado) throw new Error('Fallo simulado al guardar');
+        // TODO Firestore: await updateDoc(doc(db, coleccion, id), { ...cambios, actualizado_en: serverTimestamp() });
+        console.log(`[Firestore Mock]: coleccion/{id} ←`, cambios);
+      }
+
+      async function notificarCliente(tipo, entidad) {
+        await pausa(80);
+        if (SIMULAR.falloNotificacion) throw new Error('Fallo simulado al notificar');
+        // TODO: Cloud Function que envíe el aviso por correo o WhatsApp (el navegador no debe enviarlo directamente).
+        console.log(`[Notificación Mock]: "${tipo}" → entidad.cliente({entidad.telefono})`);
+      }
+
+      /* ───── 3. Utilidades de interfaz ───── */
+
+      const $ = (selector, raiz = document) => raiz.querySelector(selector);
+      const $$ = (selector, raiz = document) => Array.from(raiz.querySelectorAll(selector));
+
+      // Crea elementos con textContent (nunca con innerHTML), así los datos del cliente no pueden inyectar HTML.
+      function h(etiqueta, atributos = {}, ...hijos) {
+        const el = document.createElement(etiqueta);
+        for (const [clave, valor] of Object.entries(atributos)) {
+          if (valor == null || valor === false) continue;
+          if (clave === 'class') el.className = valor;
+          else if (clave === 'dataset') Object.assign(el.dataset, valor);
+          else if (clave.startsWith('on') && typeof valor === 'function') el.addEventListener(clave.slice(2), valor);
+          else el.setAttribute(clave, valor === true ? '' : valor);
+        }
+        for (const hijo of hijos.flat()) {
+          if (hijo == null || hijo === false) continue;
+          el.append(hijo.nodeType ? hijo : document.createTextNode(String(hijo)));
+        }
+        return el;
+      }
+
+      const COP = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
+      const formatearMoneda = (n) => COP.format(n);
+      const capitalizar = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+      const formatearFecha = (iso) => capitalizar(new Date(`${iso}T00:00:00`).toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' }));
+      const telefonoLimpio = (t) => String(t).replace(/[^\d+]/g, '');
+      const enlaceTelefono = (t) => h('a', { href: `tel:${telefonoLimpio(t)}` }, t);
+
+      const RTF = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
+      function tiempoDesde(iso) {
+        const minutos = Math.floor((Date.now() - Date.parse(iso)) / 60000);
+        if (minutos < 1) return 'justo ahora';
+        if (minutos < 60) return RTF.format(-minutos, 'minute');
+        const horas = Math.floor(minutos / 60);
+        if (horas < 24) return RTF.format(-horas, 'hour');
+        return RTF.format(-Math.floor(horas / 24), 'day');
+      }
+      const actualizarTiempos = () => $$('[data-desde]').forEach((el) => { el.textContent = tiempoDesde(el.dataset.desde); });
+
+      function inicioFranjaMin(franja) {
+        const m = /^\s*(\d{1,2}):(\d{2})\s*(AM|PM)/i.exec(franja);
+        if (!m) return null;
+        const hora = (parseInt(m[1], 10) % 12) + (m[3].toUpperCase() === 'PM' ? 12 : 0);
+        return hora * 60 + parseInt(m[2], 10);
+      }
+      function franjaPasada(fecha, franja) {
+        if (fecha < fechaISO(0)) return true;
+        if (fecha > fechaISO(0)) return false;
+        const inicio = inicioFranjaMin(franja);
+        const ahora = new Date();
+        return inicio != null && inicio <= ahora.getHours() * 60 + ahora.getMinutes();
+      }
+
+      function toast(mensaje, tipo = 'ok') {
+        const region = $('#toasts');
+        const el = h('div', { class: `toast ${tipo}`, role: tipo === 'error' ? 'alert' : null }, mensaje);
+        region.append(el);
+        while (region.children.length > 3) region.firstElementChild.remove();
+        setTimeout(() => el.remove(), tipo === 'ok' ? 5000 : 9000);
+      }
+
+      function confirmar({ titulo, mensaje, textoConfirmar, peligro = false }) {
+        const dlg = $('#dlg-confirmar');
+        $('#dlg-confirmar-titulo').textContent = titulo;
+        $('#dlg-confirmar-mensaje').textContent = mensaje;
+        const ok = $('#dlg-confirmar-ok');
+        ok.textContent = textoConfirmar;
+        ok.className = peligro ? 'btn btn-peligro-solido' : 'btn';
+        dlg.returnValue = '';
+        return new Promise((resolve) => {
+          dlg.addEventListener('close', () => resolve(dlg.returnValue === 'ok'), { once: true });
+          dlg.showModal();
+          $('#dlg-confirmar-volver').focus();
+        });
+      }
+
+      /* ───── 4. Reglas de negocio ───── */
+
+      const totalPedido = (p) => p.items.reduce((suma, i) => suma + i.cantidad * i.precio, 0);
+      const totalPlatos = (p) => p.items.reduce((suma, i) => suma + i.cantidad, 0);
+      const platosNoDisponibles = (p) => p.items.filter((i) => !CARTA[i.nombre]?.disponible).map((i) => i.nombre);
+      const nombreRepartidor = (id) => REPARTIDORES.find((r) => r.id === id)?.nombre ?? 'un repartidor';
+      const marcarRepartidor = (id, disponible) => { const r = REPARTIDORES.find((x) => x.id === id); if (r) r.disponible = disponible; };
+
+      const mesasLibres = ({ fecha, franja, tipo_mesa }) =>
+        CAPACIDAD_MESAS[tipo_mesa] - reservas.filter((x) => x.estado === 'confirmada' && x.fecha === fecha && x.franja === franja && x.tipo_mesa === tipo_mesa).length;
+
+      function validarReprogramacion(r, fecha, franja) {
+        if (!fecha) return 'Elige la nueva fecha.';
+        if (fecha < fechaISO(0)) return 'La nueva fecha no puede estar en el pasado. Elige hoy o un día posterior.';
+        if (fecha === r.fecha && franja === r.franja) return 'Elige una fecha o una franja distinta a la actual.';
+        if (franjaPasada(fecha, franja)) return 'Esa franja ya pasó. Elige una franja posterior.';
+        if (mesasLibres({ fecha, franja, tipo_mesa: r.tipo_mesa }) <= 0) return `No hay mesas ${MESA[r.tipo_mesa]} libres en esa fecha y franja. Elige otra.`;
+        return null;
+      }
+
+      /* ───── 5. Estado de la interfaz y acciones ───── */
+
+      const ui = {
+        vista: 'pedidos',
+        filtroPedidos: 'pendientes',
+        filtroReservas: 'por_atender',
+        desde: '',
+        hasta: '',
+        detallesAbiertos: new Set(),
+        repartidorElegido: new Map(),
+        ocupados: new Set()
+      };
+
+      // Evita acciones duplicadas (doble clic) mientras se guarda un cambio.
+      async function ejecutar(id, tarea) {
+        if (ui.ocupados.has(id)) return;
+        ui.ocupados.add(id);
+        renderActual();
+        try {
+          await tarea();
+        } finally {
+          ui.ocupados.delete(id);
+          renderActual();
+          if (!document.activeElement || document.activeElement === document.body) enfocarLista();
+        }
+      }
+
+      function enfocarLista() {
+        const lista = ui.vista === 'pedidos' ? $('#lista-pedidos') : ui.vista === 'reservas' ? $('#lista-reservas') : null;
+        if (lista) lista.focus({ preventScroll: true });
+      }
+
+      async function aplicarEstadoPedido(p, nuevoEstado, extra = {}) {
+        if (!TRANSICIONES_PEDIDO[p.estado].includes(nuevoEstado)) {
+          toast(`El pedido #${p.id} está ${ESTADOS_PEDIDO[p.estado].toLowerCase()} y ya no admite ese cambio.`, 'aviso');
+          return;
+        }
+        try {
+          await persistir('pedidos', p.id, { estado: nuevoEstado, ...extra });
+        } catch (error) {
+          console.error(error);
+          toast(`No se pudo guardar el cambio del pedido #${p.id}. Revisa tu conexión e inténtalo de nuevo.`, 'error');
+          return;
+        }
+        Object.assign(p, { estado: nuevoEstado }, extra);
+        if (nuevoEstado === 'enviado') marcarRepartidor(p.repartidorId, false);
+        if (nuevoEstado === 'entregado') marcarRepartidor(p.repartidorId, true);
+
+        const mensajes = {
+          recibido: `Recepción del pedido #${p.id} confirmada.`,
+          rechazado: `Pedido #${p.id} rechazado.`,
+          en_preparacion: `Pedido #${p.id} en preparación.`,
+          enviado: `Pedido #${p.id} enviado con ${nombreRepartidor(p.repartidorId)}.`,
+          entregado: `Pedido #${p.id} entregado.`
+        };
+        if (!NOTIFICA_PEDIDO.has(nuevoEstado)) { toast(mensajes[nuevoEstado]); return; }
+        try {
+          await notificarCliente(nuevoEstado, p);
+          toast(`${mensajes[nuevoEstado]} Cliente notificado.`);
+        } catch (error) {
+          console.error(error);
+          toast(`${mensajes[nuevoEstado]} No se pudo avisar al cliente: llámalo al ${p.telefono}.`, 'aviso');
+        }
+      }
+
+      const confirmarPedido = (p) => ejecutar(p.id, async () => {
+        const agotados = platosNoDisponibles(p);
+        if (agotados.length) {
+          const sigue = await confirmar({
+            titulo: 'Hay platos no disponibles',
+            mensaje: `Platos no disponibles: ${agotados.join(', ')}. ¿Quieres confirmar la recepción del pedido de todos modos?`,
+            textoConfirmar: 'Confirmar de todos modos'
+          });
+          if (!sigue) return;
+        }
+        await aplicarEstadoPedido(p, 'recibido');
+      });
+
+      const rechazarPedido = (p) => ejecutar(p.id, async () => {
+        const sigue = await confirmar({
+          titulo: `Rechazar el pedido #${p.id}`,
+          mensaje: `Se le avisará a ${p.cliente} que su pedido no fue recibido.`,
+          textoConfirmar: 'Rechazar pedido',
+          peligro: true
+        });
+        if (sigue) await aplicarEstadoPedido(p, 'rechazado');
+      });
+
+      const avisarRetraso = (p) => ejecutar(p.id, async () => {
+        try {
+          await notificarCliente('retraso', p);
+          toast(`Se avisó a p.clientequeelenvíodelpedido#{p.id} se retrasará.`);
+        } catch (error) {
+          console.error(error);
+          toast(`No se pudo avisar del retraso: llama a ${p.cliente} al ${p.telefono}.`, 'aviso');
+        }
+      });
+
+      async function aplicarEstadoReserva(r, nuevoEstado, extra = {}) {
+        if (r.estado === 'cancelada' && nuevoEstado === 'cancelada') {
+          toast(`La reserva #${r.id} ya estaba cancelada.`, 'aviso');
+          return;
+        }
+        if (!TRANSICIONES_RESERVA[r.estado].includes(nuevoEstado)) {
+          toast(`La reserva #${r.id} está ${ESTADOS_RESERVA[r.estado].toLowerCase()} y ya no admite ese cambio.`, 'aviso');
+          return;
+        }
+        if (nuevoEstado === 'confirmada' && mesasLibres(r) <= 0) {
+          toast(`No hay mesas ${MESA[r.tipo_mesa]} libres para ${formatearFecha(r.fecha)}, ${r.franja}. Reprograma o cancela la reserva.`, 'error');
+          return;
+        }
+        try {
+          await persistir('reservas', r.id, { estado: nuevoEstado, ...extra });
+        } catch (error) {
+          console.error(error);
+          toast(`No se pudo guardar el cambio de la reserva #${r.id}. Revisa tu conexión e inténtalo de nuevo.`, 'error');
+          return;
+        }
+        Object.assign(r, { estado: nuevoEstado }, extra);
+
+        const mensajes = {
+          confirmada: `Reserva #${r.id} confirmada.`,
+          cancelada: `Reserva #${r.id} cancelada.`,
+          reprogramada: `Reserva #${r.id} reprogramada para ${formatearFecha(r.fecha)}, ${r.franja}.`
+        };
+        try {
+          await notificarCliente(nuevoEstado, r);
+          toast(`${mensajes[nuevoEstado]} Cliente notificado.`);
+        } catch (error) {
+          console.error(error);
+          toast(`${mensajes[nuevoEstado]} No se pudo avisar al cliente: llámalo al ${r.telefono}.`, 'aviso');
+        }
+      }
+
+      const confirmarReserva = (r) => ejecutar(r.id, () => aplicarEstadoReserva(r, 'confirmada'));
+
+      const cancelarReserva = (r) => ejecutar(r.id, async () => {
+        const sigue = await confirmar({
+          titulo: `Cancelar la reserva #${r.id}`,
+          mensaje: `Se le avisará a ${r.cliente} que su reserva no podrá atenderse.`,
+          textoConfirmar: 'Cancelar reserva',
+          peligro: true
+        });
+        if (sigue) await aplicarEstadoReserva(r, 'cancelada');
+      });
+
+      function pedirReprogramacion(r) {
+        const dlg = $('#dlg-reprogramar');
+        const form = $('#form-reprogramar');
+        const fecha = $('#rep-fecha');
+        const franja = $('#rep-franja');
+        const error = $('#rep-error');
+        ('#rep-resumen').textContent=`Reserva#{r.id} de ${r.cliente}: ${formatearFecha(r.fecha)}, ${r.franja}.`;
+        fecha.min = fechaISO(0);
+        fecha.value = r.fecha;
+        franja.replaceChildren(...FRANJAS.map((f) => h('option', { value: f, selected: f === r.franja }, f)));
+        error.hidden = true;
+        dlg.returnValue = '';
+        return new Promise((resolve) => {
+          const alEnviar = (e) => {
+            e.preventDefault();
+            const motivo = validarReprogramacion(r, fecha.value, franja.value);
+            if (motivo) { error.textContent = motivo; error.hidden = false; return; }
+            dlg.close('ok');
+          };
+          form.addEventListener('submit', alEnviar);
+          dlg.addEventListener('close', () => {
+            form.removeEventListener('submit', alEnviar);
+            resolve(dlg.returnValue === 'ok' ? { fecha: fecha.value, franja: franja.value } : null);
+          }, { once: true });
+          dlg.showModal();
+        });
+      }
+
+      const reprogramarReserva = (r) => ejecutar(r.id, async () => {
+        const nueva = await pedirReprogramacion(r);
+        if (nueva) await aplicarEstadoReserva(r, 'reprogramada', nueva);
+      });
+
+      /* ───── 6. Dibujo de la interfaz ───── */
+
+      const vacio = (texto) => h('p', { class: 'vacio' }, texto);
+      const dato = (titulo, valor, clase = null, dataset = null) => h('div', {}, h('dt', {}, titulo), h('dd', { class: clase, dataset }, valor));
+
+      function renderFiltros(contenedor, grupos, activo, contar, alElegir) {
+        const conFoco = contenedor.contains(document.activeElement) ? document.activeElement.dataset.clave : null;
+        contenedor.replaceChildren(...Object.entries(grupos).map(([clave, grupo]) =>
+          h('button', { type: 'button', class: 'filtro', dataset: { clave }, 'aria-pressed': clave === activo ? 'true' : 'false', onclick: () => alElegir(clave) },
+            grupo.etiqueta, h('span', { class: 'n' }, contar(clave)))));
+        if (conFoco) contenedor.querySelector(`[data-clave="${conFoco}"]`)?.focus();
+      }
+
+      function pintarContador(selector, cantidad, texto) {
+        const el = $(selector);
+        el.hidden = cantidad === 0;
+        el.replaceChildren(String(cantidad), h('span', { class: 'sr-only' }, ` ${texto}`));
+      }
+
+      function renderNavCounts() {
+        pintarContador('#nav-count-pedidos', pedidos.filter((p) => p.estado === 'pendiente').length, 'por confirmar');
+        pintarContador('#nav-count-reservas', reservas.filter((r) => GRUPOS_RESERVA.por_atender.estados.includes(r.estado)).length, 'por atender');
+      }
+
+      function detallePedido(p) {
+        const repartidor = REPARTIDORES.find((r) => r.id === p.repartidorId);
+        const detalles = h('details', { class: 'detalle', open: ui.detallesAbiertos.has(p.id) },
+          h('summary', {}, `Detalle del pedido (${totalPlatos(p)} platos)`),
+          h('div', { class: 'detalle-cuerpo' },
+            h('ul', { class: 'platos' }, p.items.map((i) => h('li', {},
+              h('span', {},
+                `${i.cantidad} × ${i.nombre}`,
+                CARTA[i.nombre]?.disponible ? null : h('span', { class: 'no-disponible' }, ' (no disponible)'),
+                i.observacion ? h('span', { class: 'obs' }, `Nota: ${i.observacion}`) : null),
+              h('span', {}, formatearMoneda(i.cantidad * i.precio))))),
+            h('p', {}, h('strong', {}, 'Entrega: '), p.direccion,
+              p.referencias ? h('span', { class: 'obs' }, `Referencias: ${p.referencias}`) : null),
+            h('p', {}, h('strong', {}, 'Teléfono del cliente: '), enlaceTelefono(p.telefono)),
+            repartidor ? h('p', {}, h('strong', {}, 'Repartidor: '), `${repartidor.nombre}, teléfono `, enlaceTelefono(repartidor.telefono)) : null));
+        detalles.addEventListener('toggle', () => {
+          if (detalles.open) ui.detallesAbiertos.add(p.id); else ui.detallesAbiertos.delete(p.id);
+        });
+        return detalles;
+      }
+
+      function accionesPedido(p) {
+        const ocupado = ui.ocupados.has(p.id);
+        const boton = (clase, texto, onclick, atributos = {}) => h('button', { type: 'button', class: `btn ${clase}`.trim(), disabled: ocupado, onclick, ...atributos }, texto);
+        const area = h('div', { class: 'actions-area' });
+        switch (p.estado) {
+          case 'pendiente':
+            area.append(boton('btn-peligro', 'Rechazar pedido', () => rechazarPedido(p)), boton('', 'Confirmar recepción', () => confirmarPedido(p)));
+            break;
+          case 'recibido':
+            area.append(boton('', 'Marcar en preparación', () => ejecutar(p.id, () => aplicarEstadoPedido(p, 'en_preparacion'))));
+            break;
+          case 'en_preparacion': {
+            const libres = REPARTIDORES.filter((r) => r.disponible);
+            if (!libres.length) {
+              area.append(h('span', { class: 'nota' }, 'No hay repartidores disponibles: el envío se retrasará.'), boton('btn-sec', 'Avisar retraso al cliente', () => avisarRetraso(p)));
+              break;
+            }
+            const elegido = ui.repartidorElegido.get(p.id) ?? libres[0].id;
+            const selector = h('select', { class: 'select-status-admin', 'aria-label': `Repartidor para el pedido ${p.id}`, disabled: ocupado, onchange: (e) => ui.repartidorElegido.set(p.id, e.target.value) },
+              libres.map((r) => h('option', { value: r.id, selected: r.id === elegido }, r.nombre)));
+            area.append(selector, boton('', 'Marcar como enviado', () => ejecutar(p.id, () => aplicarEstadoPedido(p, 'enviado', { repartidorId: selector.value }))));
+            break;
+          }
+          case 'enviado':
+            area.append(boton('', 'Marcar como entregado', () => ejecutar(p.id, () => aplicarEstadoPedido(p, 'entregado'))));
+            break;
+          default:
+            area.append(h('span', { class: 'nota' }, p.estado === 'entregado' ? 'Pedido entregado.' : 'Pedido rechazado.'));
+        }
+        return area;
+      }
+
+      function tarjetaPedido(p) {
+        const agotados = platosNoDisponibles(p);
+        return h('article', { class: `ticketp.estado==='pendiente'?'requiere-accion':''`,'aria-labelledby':`titulo-{p.id}` },
+          h('div', { class: 'row-header' },
+            h('span', { class: 'entity-id', id: `titulo-${p.id}` }, `#${p.id}`),
+            h('span', { class: `status-badge p.estado`,id:`badge-status-{p.id}` }, ESTADOS_PEDIDO[p.estado])),
+          h('dl', { class: 'datos' },
+            dato('Cliente', p.cliente),
+            dato('Total', formatearMoneda(totalPedido(p)), 'monto'),
+            dato('Recibido', tiempoDesde(p.creado_en), null, { desde: p.creado_en })),
+          detallePedido(p),
+          p.estado === 'pendiente' && agotados.length ? h('p', { class: 'aviso' }, `Atención: ${agotados.join(', ')} no está disponible en el menú. Revisa el pedido antes de confirmarlo.`) : null,
+          accionesPedido(p));
+      }
+
+      function renderPedidos() {
+        renderFiltros($('#filtros-pedidos'), GRUPOS_PEDIDO, ui.filtroPedidos,
+          (clave) => pedidos.filter((p) => GRUPOS_PEDIDO[clave].estados.includes(p.estado)).length,
+          (clave) => { ui.filtroPedidos = clave; renderPedidos(); });
+        const porAntiguedad = (a, b) => Date.parse(a.creado_en) - Date.parse(b.creado_en);
+        const lista = pedidos
+          .filter((p) => GRUPOS_PEDIDO[ui.filtroPedidos].estados.includes(p.estado))
+          .sort(ui.filtroPedidos === 'historial' ? (a, b) => porAntiguedad(b, a) : porAntiguedad);
+        const mensajesVacios = {
+          pendientes: 'No hay pedidos por confirmar. Los pedidos nuevos aparecerán aquí.',
+          en_curso: 'No hay pedidos en curso.',
+          historial: 'Aún no hay pedidos cerrados.'
+        };
+        $('#lista-pedidos').replaceChildren(...(lista.length ? lista.map(tarjetaPedido) : [vacio(mensajesVacios[ui.filtroPedidos])]));
+        renderNavCounts();
+      }
+
+      function accionesReserva(r, sinMesas) {
+        const ocupado = ui.ocupados.has(r.id);
+        const boton = (clase, texto, onclick, atributos = {}) => h('button', { type: 'button', class: `btn ${clase}`.trim(), disabled: ocupado || atributos.disabled, onclick, 'aria-describedby': atributos.describedby }, texto);
+        const area = h('div', { class: 'actions-area' });
+        if (r.estado === 'cancelada') {
+          area.append(h('span', { class: 'nota' }, 'Reserva cancelada.'));
+          return area;
+        }
+        if (r.estado === 'reprogramada') area.append(h('span', { class: 'nota' }, 'Esperando la respuesta del cliente a la nueva fecha.'));
+        area.append(boton('btn-peligro', 'Cancelar reserva', () => cancelarReserva(r)), boton('btn-sec', 'Reprogramar', () => reprogramarReserva(r)));
+        if (r.estado !== 'confirmada') area.append(boton('', 'Confirmar reserva', () => confirmarReserva(r), { disabled: sinMesas, describedby: sinMesas ? `aviso-${r.id}` : null }));
+        return area;
+      }
+
+      function tarjetaReserva(r) {
+        const libres = mesasLibres(r);
+        const porAtender = GRUPOS_RESERVA.por_atender.estados.includes(r.estado);
+        const sinMesas = porAtender && libres <= 0;
+        return h('article', { class: `ticketporAtender?'requiere-accion':''`,'aria-labelledby':`titulo-{r.id}` },
+          h('div', { class: 'row-header' },
+            h('span', { class: 'entity-id', id: `titulo-${r.id}` }, `#${r.id}`),
+            h('span', { class: `status-badge r.estado`,id:`badge-status-{r.id}` }, ESTADOS_RESERVA[r.estado])),
+          h('dl', { class: 'datos' },
+            dato('Cliente', r.cliente),
+            dato('Teléfono', enlaceTelefono(r.telefono)),
+            dato('Fecha', formatearFecha(r.fecha)),
+            dato('Franja horaria', r.franja),
+            dato('Personas', r.personas),
+            dato('Mesa requerida', capitalizar(MESA[r.tipo_mesa])),
+            dato('Mesas libres en ese turno', `${Math.max(libres, 0)} de ${CAPACIDAD_MESAS[r.tipo_mesa]}`, libres <= 0 ? 'no-disponible' : null),
+            dato('Recibida', tiempoDesde(r.creado_en), null, { desde: r.creado_en })),
+          sinMesas ? h('p', { class: 'aviso', id: `aviso-${r.id}` }, `No hay mesas ${MESA[r.tipo_mesa]} libres en ese turno. Reprograma o cancela la reserva.`) : null,
+          accionesReserva(r, sinMesas));
+      }
+
+      function renderReservas() {
+        const rangoInvalido = ui.desde && ui.hasta && ui.desde > ui.hasta;
+        const base = rangoInvalido ? [] : reservas.filter((r) => (!ui.desde || r.fecha >= ui.desde) && (!ui.hasta || r.fecha <= ui.hasta));
+        const enGrupo = (r, clave) => !GRUPOS_RESERVA[clave].estados || GRUPOS_RESERVA[clave].estados.includes(r.estado);
+        renderFiltros($('#filtros-reservas'), GRUPOS_RESERVA, ui.filtroReservas,
+          (clave) => base.filter((r) => enGrupo(r, clave)).length,
+          (clave) => { ui.filtroReservas = clave; renderReservas(); });
+        $('#limpiar-fechas').hidden = !(ui.desde || ui.hasta);
+
+        const lista = base.filter((r) => enGrupo(r, ui.filtroReservas))
+          .sort((a, b) => a.fecha.localeCompare(b.fecha) || (inicioFranjaMin(a.franja) ?? 0) - (inicioFranjaMin(b.franja) ?? 0));
+        const mensajesVacios = {
+          por_atender: 'No hay reservas por atender. Las solicitudes nuevas aparecerán aquí.',
+          confirmadas: 'Todavía no hay reservas confirmadas.',
+          canceladas: 'No hay reservas canceladas.',
+          todas: 'Aún no hay reservas registradas.'
+        };
+        let contenido;
+        if (rangoInvalido) contenido = [vacio('La fecha inicial es posterior a la fecha final. Corrige el rango para ver las reservas.')];
+        else if (!lista.length) contenido = [vacio(ui.desde || ui.hasta ? 'No hay reservas con este estado en ese rango de fechas. Cambia el estado o limpia las fechas.' : mensajesVacios[ui.filtroReservas])];
+        else contenido = lista.map(tarjetaReserva);
+        $('#lista-reservas').replaceChildren(...contenido);
+        renderNavCounts();
+      }
+
+      function renderActual() {
+        if (ui.vista === 'pedidos') renderPedidos();
+        else if (ui.vista === 'reservas') renderReservas();
+        else renderNavCounts();
+      }
+
+      /* ───── 7. Navegación y arranque ───── */
+
+      function mostrarVista() {
+        const pedida = location.hash.slice(1);
+        ui.vista = VISTAS[pedida] ? pedida : ui.vista; // un enlace interno como #contenido no cambia de sección
+        $$('.vista').forEach((seccion) => { seccion.hidden = seccion.id !== `vista-${ui.vista}`; });
+        $$('.nav-item').forEach((enlace) => {
+          if (enlace.dataset.vista === ui.vista) enlace.setAttribute('aria-current', 'page');
+          else enlace.removeAttribute('aria-current');
+        });
+        $('#titulo-vista').textContent = VISTAS[ui.vista];
+        document.title = `${VISTAS[ui.vista]} | Orearte Parrilla`;
+        renderActual();
+      }
+
+      function actualizarConexion() {
+        const el = $('#estado-conexion');
+        el.textContent = navigator.onLine ? '● En línea' : '● Sin conexión';
+        el.className = `conexion ${navigator.onLine ? 'online' : 'offline'}`;
+      }
+
+      function alCambiarFechas() {
+        ui.desde = $('#filtro-desde').value;
+        ui.hasta = $('#filtro-hasta').value;
+        $('#filtro-hasta').min = ui.desde;
+        renderReservas();
+      }
+
+      function iniciar() {
+        $('#dlg-confirmar-volver').addEventListener('click', () => $('#dlg-confirmar').close('volver'));
+        $('#dlg-confirmar-ok').addEventListener('click', () => $('#dlg-confirmar').close('ok'));
+        $('#rep-volver').addEventListener('click', () => $('#dlg-reprogramar').close('volver'));
+        $('#filtro-desde').addEventListener('change', alCambiarFechas);
+        $('#filtro-hasta').addEventListener('change', alCambiarFechas);
+        $('#limpiar-fechas').addEventListener('click', () => {
+          $('#filtro-desde').value = '';
+          $('#filtro-hasta').value = '';
+          $('#filtro-hasta').min = '';
+          alCambiarFechas();
+        });
+        window.addEventListener('hashchange', mostrarVista);
+        window.addEventListener('online', actualizarConexion);
+        window.addEventListener('offline', actualizarConexion);
+        actualizarConexion();
+        mostrarVista();
+        setInterval(actualizarTiempos, 60000);
+      }
+
+      iniciar();
+    })();
+  </script>
+</body>
+</html>
+

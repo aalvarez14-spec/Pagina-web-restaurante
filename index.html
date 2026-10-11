@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corte & Brasa | Reservas Premium</title>
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --carbono-mate: #121212;
+            --carbono-superficie: #1E1E1E;
+            --oro-viejo: #D4AF37;
+            --texto-claro: #F5F5F5;
+            --texto-mutado: #8A8A8A;
+        }
+
+        body {
+            background-color: var(--carbono-mate);
+            color: var(--texto-claro);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- NAVBAR PREMIUM --- */
+        .premium-navbar {
+            background-color: rgba(18, 18, 18, 0.95);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            font-family: 'Playfair Display', serif;
+            color: var(--oro-viejo);
+            font-size: 1.4rem;
+            font-weight: 600;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar-item a {
+            color: var(--texto-claro);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            padding: 8px 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .navbar-item.active a, .navbar-item a:hover {
+            color: var(--oro-viejo);
+            border-color: var(--oro-viejo);
+        }
+
+        /* --- CONTENEDOR DE RESERVAS --- */
+        .booking-container {
+            max-width: 600px;
+            margin: 60px auto;
+            background-color: var(--carbono-superficie);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: opacity 0.5s ease;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--oro-viejo);
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--texto-mutado);
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        fieldset { border: none; padding: 0; margin-bottom: 25px; }
+        legend { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: var(--oro-viejo); }
+        
+        .form-group { display: flex; flex-direction: column; margin-bottom: 15px; }
+        label { font-size: 0.85rem; margin-bottom: 8px; color: var(--texto-claro); }
+
+        input[type="date"], select {
+            background-color: var(--carbono-mate);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: var(--texto-claro);
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="date"]:focus, select:focus { border-color: var(--oro-viejo); }
+
+        /* Grid de Horarios */
+        .time-slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
+        }
+
+        .time-slot-option { position: relative; }
+        .time-slot-option input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+
+        .time-slot-label {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            background-color: var(--carbono-mate);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--oro-viejo);
+            transition: all 0.3s ease;
+        }
+
+        .time-slot-option input[type="radio"]:checked + .time-slot-label {
+            background-color: var(--oro-viejo);
+            color: var(--carbono-mate);
+            font-weight: 600;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .time-slot-option.sold-out .time-slot-label {
+            opacity: 0.25;
+            cursor: not-allowed;
+            text-decoration: line-through;
+            border-color: var(--texto-mutado);
+            color: var(--texto-mutado);
+        }
+
+        .btn-submit {
+            background-color: transparent;
+            border: 1px solid var(--oro-viejo);
+            color: var(--oro-viejo);
+            padding: 15px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-submit:hover { background-color: var(--oro-viejo); color: var(--carbono-mate); }
+        .info-note { font-size: 0.8rem; color: var(--texto-mutated); margin-top: 15px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <nav class="premium-navbar">
+        <a href="index.html" class="navbar-logo">CORTE & BRASA</a>
+        <ul class="navbar-links">
+            <li class="navbar-item active"><a href="index.html">Reservas</a></li>
+            <li class="navbar-item"><a href="menu.html">El Menú</a></li>
+            <li class="navbar-item"><a href="domicilios.html">Domicilios</a></li>
+        </ul>
+    </nav>
+
+    <main class="booking-container">
+        <header>
+            <h1>Corte & Brasa</h1>
+            <p class="subtitle">Reserva de Experiencias Premium</p>
+        </header>
+
+        <form id="reservationForm" action="#" method="POST">
+            <fieldset>
+                <legend>1. Detalles de tu Visita</legend>
+                <div class="form-group">
+                    <label for="bookingDate">Selecciona la Fecha</label>
+                    <input type="date" id="bookingDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="guestsCount">Número de Comensales</label>
+                    <select id="guestsCount" required>
+                        <option value="" disabled selected>¿Cuántas personas asisten?</option>
+                        <optgroup label="Mesas Estándar (Hasta 4 pers.)">
+                            <option value="1">1 Persona</option>
+                            <option value="2">2 Personas</option>
+                            <option value="3">3 Personas</option>
+                            <option value="4">4 Personas</option>
+                        </optgroup>
+                        <optgroup label="Mesas Grandes (Hasta 8 pers.)">
+                            <option value="5">5 Personas</option>
+                            <option value="6">6 Personas</option>
+                            <option value="7">7 Personas</option>
+                            <option value="8">8 Personas</option>
+                        </optgroup>
+                        <optgroup label="Eventos Especiales">
+                            <option value="large-group">Más de 8 personas...</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>2. Horarios Disponibles (Turnos de 2 Horas)</legend>
+                <p style="font-size: 0.8rem; color: var(--texto-mutado); margin-bottom: 15px;">Horario operativo: 8:00 AM a 2:00 AM</p>
+                
+                <div class="time-slots-grid">
+                    <div class="time-slot-option"><input type="radio" id="slot1" name="timeSlot" value="08:00 AM - 10:00 AM" required><label for="slot1" class="time-slot-label">08:00 AM</label></div>
+                    <div class="time-slot-option"><input type="radio" id="slot2" name="timeSlot" value="10:00 AM - 12:00 PM"><label for="slot2" class="time-slot-label">10:00 AM</label></div>
+                    <div class="time-slot-option" id="container-slot3"><input type="radio" id="slot3" name="timeSlot" value="12:00 PM - 02:00 PM"><label for="slot3" class="time-slot-label">12:00 PM</label></div>
+                    <div class="time-slot-option"><input type="radio" id="slot4" name="timeSlot" value="02:00 PM - 04:00 PM"><label for="slot4" class="time-slot-label">02:00 PM</label></div>
+                    <div class="time-slot-option"><input type="radio" id="slot5" name="timeSlot" value="04:00 PM - 06:00 PM"><label for="slot5" class="time-slot-label">04:00 PM</label></div>
+                    <div class="time-slot-option"><input type="radio" id="slot6" name="timeSlot" value="06:00 PM - 08:00 PM"><label for="slot6" class="time-slot-label">06:00 PM</label></div>
+                    <div class="time-slot-option"><input type="radio" id="slot7" name="timeSlot" value="08:00 PM - 10:00 PM"><label for="slot7" class="time-slot-label">08:00 PM</label></div>
+                    <div class="time-slot-option"><input type="radio" id="slot8" name="timeSlot" value="10:00 PM - 12:00 AM"><label for="slot8" class="time-slot-label">10:00 PM</label></div>

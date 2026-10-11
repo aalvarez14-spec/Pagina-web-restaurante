@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Premium | Corte & Brasa</title>
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --carbono-mate: #121212;
+            --carbono-superficie: #1E1E1E;
+            --oro-viejo: #D4AF37;
+            --texto-claro: #F5F5F5;
+            --texto-mutado: #8A8A8A;
+        }
+
+        body { background-color: var(--carbono-mate); color: var(--texto-claro); font-family: 'Inter', sans-serif; margin: 0; }
+
+        /* --- NAVBAR PREMIUM --- */
+        .premium-navbar {
+            background-color: rgba(18, 18, 18, 0.95);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-logo { font-family: 'Playfair Display', serif; color: var(--oro-viejo); font-size: 1.4rem; text-decoration: none; letter-spacing: 1px; }
+        .navbar-links { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
+        .navbar-item a { color: var(--texto-claro); text-decoration: none; font-size: 0.9rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; padding: 8px 0; border-bottom: 2px solid transparent; }
+        .navbar-item.active a, .navbar-item a:hover { color: var(--oro-viejo); border-color: var(--oro-viejo); }
+
+        .menu-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        header { text-align: center; margin-bottom: 40px; }
+        header h1 { font-family: 'Playfair Display', serif; color: var(--oro-viejo); font-size: 3rem; margin-bottom: 5px; }
+        .subtitle { color: var(--texto-mutado); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 3px; }
+
+        /* Categorías */
+        .category-nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 50px; flex-wrap: wrap; }
+        .category-btn { background: transparent; border: 1px solid rgba(212, 175, 55, 0.2); color: var(--texto-claro); padding: 10px 24px; font-size: 0.9rem; cursor: pointer; border-radius: 20px; transition: all 0.3s ease; }
+        .category-btn.active, .category-btn:hover { border-color: var(--oro-viejo); color: var(--oro-viejo); background: rgba(212, 175, 55, 0.05); }
+
+        /* Grid */
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; }
+        
+        .menu-item-card {
+            background-color: var(--carbono-superficie);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: transform 0.3s ease, border-color 0.3s ease, opacity 0.3s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .menu-item-card:hover { transform: translateY(-5px); border-color: rgba(212, 175, 55, 0.2); }
+        .badge-premium { position: absolute; top: 15px; left: 15px; background-color: var(--oro-viejo); color: var(--carbono-mate); font-size: 0.75rem; font-weight: 600; padding: 4px 10px; text-transform: uppercase; border-radius: 2px; z-index: 10; }
+        .card-image-wrapper { position: relative; width: 100%; padding-top: 65%; background-color: #1a1a1a; overflow: hidden; }
+        .card-image-wrapper img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .menu-item-card:hover .card-image-wrapper img { transform: scale(1.05); }
+        
+        .card-content { padding: 25px; display: flex; flex-direction: column; flex-grow: 1; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .item-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin: 0; }
+        .item-price { color: var(--oro-viejo); font-weight: 600; font-size: 1.15rem; }
+        .item-description { font-size: 0.88rem; color: var(--texto-mutado); line-height: 1.5; margin-bottom: 20px; flex-grow: 1; }
+        
+        .btn-add-order { background: transparent; border: 1px solid var(--oro-viejo); color: var(--oro-viejo); padding: 12px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border-radius: 4px; transition: all 0.3s ease; width: 100%; }
+        .btn-add-order:hover { background-color: var(--oro-viejo); color: var(--carbono-mate); }
+
+        /* Soft Delete visual */
+        .menu-item-card.out-of-stock { opacity: 0.35; }
+        .menu-item-card.out-of-stock .btn-add-order { border-color: var(--texto-mutado); color: var(--texto-mutado); cursor: not-allowed; }
+        .out-of-stock-text { color: #E74C3C; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+    <nav class="premium-navbar">
+        <a href="index.html" class="navbar-logo">CORTE & BRASA</a>
+        <ul class="navbar-links">
+            <li class="navbar-item"><a href="index.html">Reservas</a></li>
+            <li class="navbar-item active"><a href="menu.html">El Menú</a></li>
+            <li class="navbar-item"><a href="domicilios.html">Domicilios</a></li>
+        </ul>
+    </nav>
+
+    <main class="menu-container">
+        <header>
+            <h1>Nuestra Selección</h1>
+            <p class="subtitle">Cortes de Autor & Parrilla al Carbón</p>
+        </header>
+
+        <nav class="category-nav">
+            <button class="category-btn active">Todo</button>
+            <button class="category-btn">Entradas</button>
+            <button class="category-btn">Cortes Premium</button>
+        </nav>
+
+        <div class="menu-grid">
+            <article class="menu-item-card" data-id="PROD_P01" data-category="Cortes Premium">
+                <span class="badge-premium">Insignia</span>
+                <div class="card-image-wrapper">
+                    <img src="https://unsplash.com" alt="Tomahawk">
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <h2 class="item-title">Tomahawk Angus Gold</h2>
+                        <span class="item-price">$185.000</span>
+                    </div>
+                    <p class="item-description">Corte madurado de 900g a la brasa con costra de sal marina artesanal y mantequilla de hierbas finas.</p>
+                    <button class="btn-add-order">Añadir al Pedido</button>
+                </div>
+            </article>
+
+            <article class="menu-item-card" data-id="PROD_P02" data-category="Cortes Premium">
+                <div class="card-image-wrapper">
+                    <img src="https://unsplash.com" alt="Bife">
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <h2 class="item-title">Bife de Chorizo</h2>
+                        <span class="item-price">$89.000</span>
+                    </div>
+                    <p class="item-description">Corte argentino tierno de 400g con un borde de grasa crujiente ideal para amantes del sabor intenso.</p>
+                    <button class="btn-add-order">Añadir al Pedido</button>
+                </div>
+            </article>
+
+            <article class="menu-item-card out-of-stock" data-id="PROD_P03" data-category="Entradas">
+                <div class="card-image-wrapper">
+                    <img src="https://unsplash.com" alt="Chinchulines">
+                </div>
+                <div class="card-content">
+                    <div class="card-header">
+                        <h2 class="item-title">Chinchulines al Limón</h2>
+                        <span class="item-price">$32.000</span>
+                    </div>
+                    <p class="item-description">Entrada crocante sazonada con un toque secreto de la casa y reducción de limones frescos.</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="out-of-stock-text">Agotado hoy</span>
+                        <button class="btn-add-order" disabled style="width:60%;">No Disponible</button>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <script src="menu.js"></script>
+</body>
+</html>
