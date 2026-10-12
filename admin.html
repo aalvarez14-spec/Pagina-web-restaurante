@@ -179,7 +179,7 @@
   <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
   <aside>
-    <div class="brand">Orearte Parrilla</div>
+    <div class="brand">Fernando Parrilla</div>
     <nav class="nav-menu" aria-label="Secciones del panel">
       <a href="#pedidos" class="nav-item" data-vista="pedidos">Gestionar pedidos <span class="nav-count" id="nav-count-pedidos" hidden></span></a>
       <a href="#reservas" class="nav-item" data-vista="reservas">Gestionar reservas <span class="nav-count" id="nav-count-reservas" hidden></span></a>
@@ -311,7 +311,7 @@
       const fechaISO = (offsetDias = 0) => {
         const d = new Date();
         d.setDate(d.getDate() + offsetDias);
-        return `d.getFullYear()-{pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
       };
       const hace = (minutos) => new Date(Date.now() - minutos * 60000).toISOString();
 
@@ -365,14 +365,14 @@
         await pausa(120);
         if (SIMULAR.falloGuardado) throw new Error('Fallo simulado al guardar');
         // TODO Firestore: await updateDoc(doc(db, coleccion, id), { ...cambios, actualizado_en: serverTimestamp() });
-        console.log(`[Firestore Mock]: coleccion/{id} ←`, cambios);
+        console.log(`[Firestore Mock]: ${coleccion}/${id} ←`, cambios);
       }
 
       async function notificarCliente(tipo, entidad) {
         await pausa(80);
         if (SIMULAR.falloNotificacion) throw new Error('Fallo simulado al notificar');
         // TODO: Cloud Function que envíe el aviso por correo o WhatsApp (el navegador no debe enviarlo directamente).
-        console.log(`[Notificación Mock]: "${tipo}" → entidad.cliente({entidad.telefono})`);
+        console.log(`[Notificación Mock]: "${tipo}" → ${entidad.cliente} (${entidad.telefono})`);
       }
 
       /* ───── 3. Utilidades de interfaz ───── */
@@ -563,7 +563,7 @@
       const avisarRetraso = (p) => ejecutar(p.id, async () => {
         try {
           await notificarCliente('retraso', p);
-          toast(`Se avisó a p.clientequeelenvíodelpedido#{p.id} se retrasará.`);
+          toast(`Se avisó a ${p.cliente} que el envío del pedido #${p.id} se retrasará.`);
         } catch (error) {
           console.error(error);
           toast(`No se pudo avisar del retraso: llama a ${p.cliente} al ${p.telefono}.`, 'aviso');
@@ -624,7 +624,7 @@
         const fecha = $('#rep-fecha');
         const franja = $('#rep-franja');
         const error = $('#rep-error');
-        ('#rep-resumen').textContent=`Reserva#{r.id} de ${r.cliente}: ${formatearFecha(r.fecha)}, ${r.franja}.`;
+        $('#rep-resumen').textContent = `Reserva #${r.id} de ${r.cliente}: ${formatearFecha(r.fecha)}, ${r.franja}.`;
         fecha.min = fechaISO(0);
         fecha.value = r.fecha;
         franja.replaceChildren(...FRANJAS.map((f) => h('option', { value: f, selected: f === r.franja }, f)));
@@ -730,10 +730,10 @@
 
       function tarjetaPedido(p) {
         const agotados = platosNoDisponibles(p);
-        return h('article', { class: `ticketp.estado==='pendiente'?'requiere-accion':''`,'aria-labelledby':`titulo-{p.id}` },
+        return h('article', { class: `ticket ${p.estado === 'pendiente' ? 'requiere-accion' : ''}`, 'aria-labelledby': `titulo-${p.id}` },
           h('div', { class: 'row-header' },
             h('span', { class: 'entity-id', id: `titulo-${p.id}` }, `#${p.id}`),
-            h('span', { class: `status-badge p.estado`,id:`badge-status-{p.id}` }, ESTADOS_PEDIDO[p.estado])),
+            h('span', { class: `status-badge ${p.estado}`, id: `badge-status-${p.id}` }, ESTADOS_PEDIDO[p.estado])),
           h('dl', { class: 'datos' },
             dato('Cliente', p.cliente),
             dato('Total', formatearMoneda(totalPedido(p)), 'monto'),
@@ -778,10 +778,10 @@
         const libres = mesasLibres(r);
         const porAtender = GRUPOS_RESERVA.por_atender.estados.includes(r.estado);
         const sinMesas = porAtender && libres <= 0;
-        return h('article', { class: `ticketporAtender?'requiere-accion':''`,'aria-labelledby':`titulo-{r.id}` },
+        return h('article', { class: `ticket ${porAtender ? 'requiere-accion' : ''}`, 'aria-labelledby': `titulo-${r.id}` },
           h('div', { class: 'row-header' },
             h('span', { class: 'entity-id', id: `titulo-${r.id}` }, `#${r.id}`),
-            h('span', { class: `status-badge r.estado`,id:`badge-status-{r.id}` }, ESTADOS_RESERVA[r.estado])),
+            h('span', { class: `status-badge ${r.estado}`, id: `badge-status-${r.id}` }, ESTADOS_RESERVA[r.estado])),
           h('dl', { class: 'datos' },
             dato('Cliente', r.cliente),
             dato('Teléfono', enlaceTelefono(r.telefono)),
@@ -837,7 +837,7 @@
           else enlace.removeAttribute('aria-current');
         });
         $('#titulo-vista').textContent = VISTAS[ui.vista];
-        document.title = `${VISTAS[ui.vista]} | Orearte Parrilla`;
+        document.title = `${VISTAS[ui.vista]} | Fernando Parrilla`;
         renderActual();
       }
 

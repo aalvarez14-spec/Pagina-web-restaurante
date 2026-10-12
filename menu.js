@@ -1,5 +1,5 @@
 /**
- * Black & Gold Parrilla - Gestión de Carrito Premium (Persistencia Local)
+ * Fernando Parrilla - Gestión de Carrito Premium (Persistencia Local)
  * Almacenamiento optimizado de ítems mediante localStorage
  */
 

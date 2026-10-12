@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corte & Brasa | Reservas Premium</title>
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <title>Fernando Parrilla | Reservas Premium</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
     
     <style>
         :root {
@@ -108,7 +108,7 @@
         .form-group { display: flex; flex-direction: column; margin-bottom: 15px; }
         label { font-size: 0.85rem; margin-bottom: 8px; color: var(--texto-claro); }
 
-        input[type="date"], select {
+        input[type="date"], input[type="text"], input[type="tel"], input[type="email"], select {
             background-color: var(--carbono-mate);
             border: 1px solid rgba(212, 175, 55, 0.4);
             color: var(--texto-claro);
@@ -119,7 +119,7 @@
             transition: border-color 0.3s;
         }
 
-        input[type="date"]:focus, select:focus { border-color: var(--oro-viejo); }
+        input[type="date"]:focus, input[type="text"]:focus, input[type="tel"]:focus, input[type="email"]:focus, select:focus { border-color: var(--oro-viejo); }
 
         /* Grid de Horarios */
         .time-slots-grid {
@@ -176,13 +176,13 @@
         }
 
         .btn-submit:hover { background-color: var(--oro-viejo); color: var(--carbono-mate); }
-        .info-note { font-size: 0.8rem; color: var(--texto-mutated); margin-top: 15px; text-align: center; }
+        .info-note { font-size: 0.8rem; color: var(--texto-mutado); margin-top: 15px; text-align: center; }
     </style>
 </head>
 <body>
 
     <nav class="premium-navbar">
-        <a href="index.html" class="navbar-logo">CORTE & BRASA</a>
+        <a href="index.html" class="navbar-logo">FERNANDO PARRILLA</a>
         <ul class="navbar-links">
             <li class="navbar-item active"><a href="index.html">Reservas</a></li>
             <li class="navbar-item"><a href="menu.html">El Menú</a></li>
@@ -192,11 +192,11 @@
 
     <main class="booking-container">
         <header>
-            <h1>Corte & Brasa</h1>
+            <h1>Fernando Parrilla</h1>
             <p class="subtitle">Reserva de Experiencias Premium</p>
         </header>
 
-        <form id="reservationForm" action="#" method="POST">
+        <form id="reservationForm" action="#" method="POST" novalidate>
             <fieldset>
                 <legend>1. Detalles de tu Visita</legend>
                 <div class="form-group">
@@ -240,3 +240,33 @@
                     <div class="time-slot-option"><input type="radio" id="slot6" name="timeSlot" value="06:00 PM - 08:00 PM"><label for="slot6" class="time-slot-label">06:00 PM</label></div>
                     <div class="time-slot-option"><input type="radio" id="slot7" name="timeSlot" value="08:00 PM - 10:00 PM"><label for="slot7" class="time-slot-label">08:00 PM</label></div>
                     <div class="time-slot-option"><input type="radio" id="slot8" name="timeSlot" value="10:00 PM - 12:00 AM"><label for="slot8" class="time-slot-label">10:00 PM</label></div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>3. Tus Datos</legend>
+                <div class="form-group">
+                    <label for="customerName">Nombre completo</label>
+                    <input type="text" id="customerName" name="customerName" autocomplete="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">Teléfono</label>
+                    <input type="tel" id="customerPhone" name="customerPhone" autocomplete="tel" inputmode="tel" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerEmail">Correo electrónico (opcional)</label>
+                    <input type="email" id="customerEmail" name="customerEmail" autocomplete="email">
+                </div>
+            </fieldset>
+
+            <!-- app.js muestra aquí, justo antes del botón, los mensajes de error y aviso -->
+            <button type="submit" class="btn-submit">Solicitar Reserva</button>
+            <p class="info-note">El restaurante revisará tu solicitud y te avisará cuando la confirme.</p>
+        </form>
+    </main>
+
+    <noscript><p style="text-align:center;color:#8A8A8A;padding:16px;">Para reservar en línea necesitas activar JavaScript en tu navegador.</p></noscript>
+
+    <script src="app.js"></script>
+</body>
+</html>

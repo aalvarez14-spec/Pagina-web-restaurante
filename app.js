@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Orearte Parrilla - Módulo de reservas (front-end)
+ * Fernando Parrilla - Módulo de reservas (front-end)
  *
  * Reglas de negocio
  *  - Mesa tipo A: de 1 a 4 personas. Mesa tipo B: de 5 a 8 personas. Hay 5 mesas de cada tipo.
@@ -59,12 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const pad = (n) => String(n).padStart(2, '0');
   const hoyISO = () => {
     const d = new Date();
-    return `d.getFullYear()-{pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   };
   const mananaISO = () => {
     const d = new Date();
     d.setDate(d.getDate() + 1);
-    return `d.getFullYear()-{pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   };
   const formatearFecha = (iso) => {
     const texto = new Date(`${iso}T00:00:00`).toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let consultaActual = 0;
   let ultimasAgotadas = [];
   let ultimaClave = '';
-  const claveActual = () => `bookingDateInput.value|{guestsSelect.value}`;
+  const claveActual = () => `${bookingDateInput.value}|${guestsSelect.value}`;
 
   const avisarFranjas = (texto) => {
     mostrarMensaje(texto, 'aviso');

@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedidos a Domicilio Premium | Corte & Brasa</title>
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-    
+    <meta name="color-scheme" content="dark">
+    <title>Pedidos a Domicilio | Fernando Parrilla</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --carbono-mate: #121212;
@@ -15,9 +16,16 @@
             --oro-viejo: #D4AF37;
             --texto-claro: #F5F5F5;
             --texto-mutado: #8A8A8A;
+            --borde-oro: rgba(212, 175, 55, 0.25);
+            --error: #FF8A80;
+            --exito: #2ECC71;
         }
 
-        body { background-color: var(--carbono-mate); color: var(--texto-claro); font-family: 'Inter', sans-serif; margin: 0; }
+        *, *::before, *::after { box-sizing: border-box; }
+        [hidden] { display: none !important; }
+
+        body { background-color: var(--carbono-mate); color: var(--texto-claro); font-family: 'Inter', system-ui, sans-serif; margin: 0; line-height: 1.5; }
+        :focus-visible { outline: 2px solid var(--oro-viejo); outline-offset: 2px; }
 
         /* --- NAVBAR PREMIUM --- */
         .premium-navbar {
@@ -31,6 +39,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px 30px;
         }
 
         .navbar-logo { font-family: 'Playfair Display', serif; color: var(--oro-viejo); font-size: 1.4rem; text-decoration: none; letter-spacing: 1px; }
@@ -38,92 +48,235 @@
         .navbar-item a { color: var(--texto-claro); text-decoration: none; font-size: 0.9rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; padding: 8px 0; border-bottom: 2px solid transparent; }
         .navbar-item.active a, .navbar-item a:hover { color: var(--oro-viejo); border-color: var(--oro-viejo); }
 
-        .checkout-container { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; }
-        @media (max-width: 768px) { .checkout-container { grid-template-columns: 1fr; } }
+        .checkout-container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
 
-        header { grid-column: 1 / -1; text-align: center; }
+        header { text-align: center; margin-bottom: 30px; }
         header h1 { font-family: 'Playfair Display', serif; color: var(--oro-viejo); font-size: 2.5rem; margin: 0; }
-        .subtitle { color: var(--texto-mutado); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
+        .subtitle { color: var(--texto-mutado); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; margin: 6px 0 0; }
 
-        .panel-form, .panel-summary { background-color: var(--carbono-superficie); border-radius: 8px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); height: fit-content; }
-        h2 { font-size: 1.2rem; color: var(--oro-viejo); margin-top: 0; margin-bottom: 25px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 10px; }
+        /* Pestañas: hacer pedido / consultar pedido */
+        .vista-nav { display: flex; justify-content: center; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+        .vista-btn { background: transparent; border: 1px solid var(--borde-oro); color: var(--texto-claro); padding: 10px 24px; font: inherit; font-size: 0.9rem; cursor: pointer; border-radius: 20px; transition: all 0.3s ease; }
+        .vista-btn:hover, .vista-btn[aria-pressed="true"] { border-color: var(--oro-viejo); color: var(--oro-viejo); background: rgba(212, 175, 55, 0.07); }
+
+        .vista-pedido { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; align-items: start; }
+        @media (max-width: 768px) {
+            .vista-pedido { grid-template-columns: 1fr; gap: 24px; }
+            .premium-navbar { padding: 12px 20px; }
+            .navbar-links { gap: 18px; }
+            header h1 { font-size: 2rem; }
+            .panel-form, .panel-summary { padding: 22px 18px; }
+        }
+
+        .panel-form, .panel-summary { background-color: var(--carbono-superficie); border-radius: 8px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+        .panel-summary { position: sticky; top: 90px; }
+        @media (max-width: 768px) { .panel-summary { position: static; } }
+
+        fieldset { border: 0; padding: 0; margin: 0 0 10px; min-width: 0; }
+        legend, h2 { font-size: 1.2rem; color: var(--oro-viejo); margin: 0 0 20px; padding: 0 0 10px; width: 100%; border-bottom: 1px solid rgba(255, 255, 255, 0.05); font-weight: 600; }
 
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .form-group { display: flex; flex-direction: column; margin-bottom: 20px; }
-        .form-group.full-width { grid-column: 1 / -1; }
+        @media (max-width: 520px) { .form-row { grid-template-columns: 1fr; } }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 18px; min-width: 0; }
         label { font-size: 0.85rem; margin-bottom: 8px; }
+        .opcional { color: var(--texto-mutado); font-weight: 400; }
 
-        input[type="text"], input[type="tel"], select, textarea { background-color: var(--carbono-mate); border: 1px solid rgba(212, 175, 55, 0.2); color: var(--texto-claro); padding: 12px; border-radius: 4px; font-size: 0.95rem; outline: none; }
-        input[type="text"]:focus, input[type="tel"]:focus, select:focus { border-color: var(--oro-viejo); }
-        textarea { resize: none; height: 60px; }
+        input[type="text"], input[type="tel"], input[type="email"], textarea {
+            background-color: var(--carbono-mate); border: 1px solid var(--borde-oro); color: var(--texto-claro);
+            padding: 12px; border-radius: 4px; font: inherit; font-size: 0.95rem; width: 100%; min-height: 46px;
+        }
+        input:focus, textarea:focus { border-color: var(--oro-viejo); outline: none; box-shadow: 0 0 0 1px var(--oro-viejo); }
+        textarea { resize: vertical; min-height: 70px; }
+        .campo-invalido { border-color: var(--error) !important; box-shadow: 0 0 0 1px var(--error) !important; }
+
+        .ayuda { margin: 6px 0 0; font-size: 0.8rem; color: var(--texto-mutado); }
+        .ayuda.error { color: var(--error); }
+        .ayuda.ok { color: var(--exito); }
+
+        .metodo-pago { display: flex; align-items: center; gap: 10px; padding: 12px 14px; margin-bottom: 8px; border: 1px solid var(--oro-viejo); border-radius: 4px; background: rgba(212, 175, 55, 0.06); font-size: 0.95rem; }
+        .metodo-pago::before { content: "✓"; color: var(--oro-viejo); font-weight: 700; }
 
         /* Resumen */
-        .order-items-list { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
-        .order-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; border-bottom: 1px solid rgba(255, 255, 255, 0.03); padding-bottom: 12px; }
+        .order-items-list { list-style: none; margin: 0 0 25px; padding: 0; display: flex; flex-direction: column; gap: 15px; }
+        .order-items-list:focus { outline: none; }
+        .order-item { display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 14px; }
+        .item-details { display: flex; flex-direction: column; }
         .item-details span { color: var(--texto-mutado); font-size: 0.8rem; }
-        
-        .pricing-totals { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(212, 175, 55, 0.1); padding-top: 20px; margin-bottom: 25px; }
+        .item-controls { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+        .qty { display: inline-flex; align-items: center; border: 1px solid var(--borde-oro); border-radius: 4px; }
+        .qty-btn { background: transparent; border: 0; color: var(--oro-viejo); width: 36px; height: 36px; font-size: 1.1rem; cursor: pointer; }
+        .qty-btn:hover:not(:disabled) { background: rgba(212, 175, 55, 0.12); }
+        .qty-btn:disabled { color: var(--texto-mutado); cursor: not-allowed; opacity: 0.5; }
+        .qty-value { min-width: 32px; text-align: center; font-weight: 600; }
+        .item-price { font-weight: 600; margin-left: auto; }
+        .item-remove { background: transparent; border: 0; color: var(--texto-mutado); font: inherit; font-size: 0.8rem; text-decoration: underline; cursor: pointer; padding: 6px 4px; }
+        .item-remove:hover { color: var(--error); }
+        .carrito-vacio { text-align: center; color: var(--texto-mutado); font-size: 0.9rem; padding: 20px 0; }
+        .carrito-vacio a { color: var(--oro-viejo); text-decoration: none; }
+        .carrito-vacio a:hover { text-decoration: underline; }
+
+        .pricing-totals { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(212, 175, 55, 0.1); padding-top: 20px; margin-bottom: 20px; }
         .total-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--texto-mutado); }
         .total-row.grand-total { font-size: 1.2rem; color: var(--oro-viejo); font-weight: 700; }
+        .total-row.cambio { color: var(--texto-claro); }
 
-        .btn-checkout { background-color: transparent; border: 1px solid var(--oro-viejo); color: var(--oro-viejo); padding: 15px; font-size: 0.95rem; font-weight: 600; text-transform: uppercase; width: 100%; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; }
-        .btn-checkout:hover { background-color: var(--oro-viejo); color: var(--carbono-mate); }
+        .msg { margin: 0 0 14px; padding: 12px 14px; border: 1px solid; border-radius: 4px; font-size: 0.9rem; }
+        .msg:empty { display: none; }
+        .msg.error { color: var(--error); border-color: rgba(255, 107, 94, 0.5); background: rgba(255, 107, 94, 0.08); }
+        .msg.info { color: var(--oro-viejo); border-color: rgba(212, 175, 55, 0.4); background: rgba(212, 175, 55, 0.06); }
+
+        .btn-checkout { background-color: transparent; border: 1px solid var(--oro-viejo); color: var(--oro-viejo); padding: 15px; font: inherit; font-size: 0.95rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; width: 100%; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; }
+        .btn-checkout:hover:not(:disabled) { background-color: var(--oro-viejo); color: var(--carbono-mate); }
+        .btn-checkout:disabled { opacity: 0.35; cursor: not-allowed; }
+        .btn-secundario { background: transparent; border: 1px solid var(--borde-oro); color: var(--texto-claro); padding: 12px 20px; font: inherit; font-size: 0.85rem; border-radius: 4px; cursor: pointer; }
+        .btn-secundario:hover { border-color: var(--oro-viejo); color: var(--oro-viejo); }
+        .btn-secundario:disabled { opacity: 0.5; cursor: wait; }
+
+        /* Seguimiento */
+        .tracking { max-width: 720px; margin: 0 auto; }
+        #trackResult { margin-top: 28px; }
+        #trackResult:focus { outline: none; }
+        .pedido-banner { text-align: center; padding: 18px; margin-bottom: 22px; border: 1px solid rgba(46, 204, 113, 0.4); background: rgba(46, 204, 113, 0.07); border-radius: 6px; }
+        .pedido-banner strong { color: var(--exito); display: block; font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 4px; }
+        .pedido-cabecera { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+        .pedido-codigo { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--oro-viejo); }
+        .badge { padding: 5px 12px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; background: rgba(212, 175, 55, 0.15); color: var(--oro-viejo); }
+        .badge.entregado { background: rgba(46, 204, 113, 0.15); color: var(--exito); }
+        .badge.rechazado { background: rgba(255, 107, 94, 0.15); color: var(--error); }
+        .badge.enviado { background: rgba(179, 136, 235, 0.15); color: #B388EB; }
+        .estado-detalle { color: var(--texto-mutado); margin: 0 0 22px; }
+
+        .timeline { list-style: none; margin: 0 0 26px; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+        .timeline li { text-align: center; font-size: 0.74rem; color: var(--texto-mutado); padding-top: 14px; border-top: 3px solid rgba(255, 255, 255, 0.1); }
+        .timeline li.hecho { border-top-color: var(--oro-viejo); color: var(--texto-claro); }
+        .timeline li.actual { border-top-color: var(--oro-viejo); color: var(--oro-viejo); font-weight: 700; }
+        @media (max-width: 520px) { .timeline { grid-template-columns: 1fr; } .timeline li { text-align: left; border-top: 0; border-left: 3px solid rgba(255, 255, 255, 0.1); padding: 4px 0 4px 12px; } .timeline li.hecho, .timeline li.actual { border-left-color: var(--oro-viejo); } }
+
+        .datos-pedido { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; margin: 0 0 22px; font-size: 0.9rem; }
+        @media (max-width: 520px) { .datos-pedido { grid-template-columns: 1fr; } }
+        .datos-pedido dt { color: var(--texto-mutado); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 1px; }
+        .datos-pedido dd { margin: 0 0 8px; overflow-wrap: anywhere; }
+        .datos-pedido a { color: var(--oro-viejo); }
+        .lista-platos { list-style: none; margin: 0 0 18px; padding: 0; font-size: 0.9rem; }
+        .lista-platos li { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .acciones-pedido { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+        .actualizado { color: var(--texto-mutado); font-size: 0.78rem; margin: 14px 0 0; }
+
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
     </style>
 </head>
 <body>
 
-    <nav class="premium-navbar">
-        <a href="index.html" class="navbar-logo">CORTE & BRASA</a>
+    <nav class="premium-navbar" aria-label="Navegación principal">
+        <a href="index.html" class="navbar-logo">FERNANDO PARRILLA</a>
         <ul class="navbar-links">
             <li class="navbar-item"><a href="index.html">Reservas</a></li>
             <li class="navbar-item"><a href="menu.html">El Menú</a></li>
-            <li class="navbar-item active"><a href="domicilios.html">Domicilios</a></li>
+            <li class="navbar-item active"><a href="domicilios.html" aria-current="page">Domicilios</a></li>
         </ul>
     </nav>
 
-    <div class="checkout-container">
+    <main class="checkout-container">
         <header>
-            <h1>Corte & Brasa</h1>
+            <h1>Fernando Parrilla</h1>
             <p class="subtitle">Experiencia Gastronómica en Casa</p>
+            <div class="vista-nav" role="group" aria-label="Secciones de domicilios">
+                <button type="button" class="vista-btn" id="tabPedido" aria-pressed="true">Hacer mi pedido</button>
+                <button type="button" class="vista-btn" id="tabSeguimiento" aria-pressed="false">Consultar mi pedido</button>
+            </div>
         </header>
 
-        <main class="panel-form">
-            <h2>1. Datos de Entrega</h2>
-            <form id="deliveryForm">
-                <div class="form-row">
-                    <div class="form-group"><label for="fullName">Nombre Completo *</label><input type="text" id="fullName" required></div>
-                    <div class="form-group"><label for="phone">Teléfono *</label><input type="tel" id="phone" required></div>
-                </div>
-                <div class="form-group"><label for="address">Dirección *</label><input type="text" id="address" required></div>
-                <div class="form-row">
-                    <div class="form-group"><label for="apt">Apto / Casa</label><input type="text" id="apt"></div>
-                    <div class="form-group"><label for="neighborhood">Barrio *</label><input type="text" id="neighborhood" required></div>
-                </div>
-                <div class="form-group"><label for="notes">Indicaciones</label><textarea id="notes"></textarea></div>
-                
-                <h2>2. Método de Pago</h2>
-                <div class="form-group">
-                    <select id="paymentMethod" required>
-                        <option value="cash">Efectivo (Contra entrega)</option>
-                        <option value="dataphone">Datáfono (Contra entrega)</option>
-                    </select>
-                </div>
-            </form>
-        </main>
+        <!-- VISTA 1: realizar pedido -->
+        <section id="vistaPedido" class="vista-pedido" aria-label="Realizar pedido a domicilio">
+            <div class="panel-form">
+                <form id="deliveryForm" novalidate>
+                    <fieldset>
+                        <legend>1. Datos de entrega</legend>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="fullName">Nombre completo *</label>
+                                <input type="text" id="fullName" name="fullName" autocomplete="name" maxlength="60" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Celular *</label>
+                                <input type="tel" id="phone" name="phone" autocomplete="tel-national" inputmode="tel" maxlength="20" placeholder="300 000 0000" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Correo electrónico <span class="opcional">(opcional, para avisarte del estado)</span></label>
+                            <input type="email" id="email" name="email" autocomplete="email" maxlength="100" placeholder="nombre@correo.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Dirección *</label>
+                            <input type="text" id="address" name="address" autocomplete="street-address" maxlength="100" placeholder="Ej: Cra 15 # 85-20" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="apt">Apto / Casa <span class="opcional">(opcional)</span></label>
+                                <input type="text" id="apt" name="apt" maxlength="30" placeholder="Ej: Apto 402">
+                            </div>
+                            <div class="form-group">
+                                <label for="neighborhood">Barrio *</label>
+                                <input type="text" id="neighborhood" name="neighborhood" maxlength="50" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="notes">Indicaciones para el repartidor <span class="opcional">(opcional)</span></label>
+                            <textarea id="notes" name="notes" maxlength="200" placeholder="Ej: Portón negro, el timbre no funciona, llamar al llegar"></textarea>
+                        </div>
+                    </fieldset>
 
-        <aside class="panel-summary">
-            <h2>Resumen del Pedido</h2>
-            <div class="order-items-list">
-                <!-- Se inyecta dinámicamente con domicilios.js -->
+                    <fieldset>
+                        <legend>2. Método de pago</legend>
+                        <p class="metodo-pago"><strong>Efectivo contra entrega</strong></p>
+                        <p class="ayuda">Por ahora solo recibimos pagos en efectivo al momento de la entrega. Próximamente habilitaremos los pagos en línea.</p>
+                        <div class="form-group" style="margin-top: 18px;">
+                            <label for="cashAmount">¿Con cuánto vas a pagar? *</label>
+                            <input type="text" id="cashAmount" name="cashAmount" inputmode="numeric" autocomplete="off" placeholder="Ej: 100.000" aria-describedby="cashHelp" required>
+                            <p class="ayuda" id="cashHelp" aria-live="polite"></p>
+                        </div>
+                    </fieldset>
+                </form>
             </div>
-            <div class="pricing-totals">
-                <div class="total-row"><span>Subtotal</span><span id="subtotal">$0</span></div>
-                <div class="total-row"><span>Envío</span><span id="shipping">$5.000</span></div>
-                <div class="total-row grand-total"><span>Total</span><span id="grandTotal">$0</span></div>
-            </div>
-            <button type="submit" form="deliveryForm" class="btn-checkout">Confirmar Pedido</button>
-        </aside>
-    </div>
+
+            <aside class="panel-summary" aria-labelledby="tituloResumen">
+                <h2 id="tituloResumen">Resumen del pedido</h2>
+                <ul class="order-items-list" id="orderItems" tabindex="-1">
+                    <!-- Se inyecta dinámicamente con domicilios.js -->
+                </ul>
+                <div class="pricing-totals">
+                    <div class="total-row"><span>Subtotal</span><span id="subtotal">$0</span></div>
+                    <div class="total-row"><span>Envío</span><span id="shipping">$5.000</span></div>
+                    <div class="total-row grand-total"><span>Total</span><span id="grandTotal">$0</span></div>
+                    <div class="total-row cambio" id="changeRow" hidden><span>Vueltos a llevar</span><span id="changeAmount">$0</span></div>
+                </div>
+                <div id="orderMessage" class="msg" role="alert"></div>
+                <button type="submit" form="deliveryForm" class="btn-checkout" id="checkoutButton">Confirmar Pedido</button>
+            </aside>
+        </section>
+
+        <!-- VISTA 2: consultar / seguir el pedido -->
+        <section id="vistaSeguimiento" class="panel-form tracking" aria-labelledby="tituloSeguimiento" hidden>
+            <h2 id="tituloSeguimiento">Consultar mi pedido</h2>
+            <form id="trackingForm" novalidate>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="trackCode">Código del pedido *</label>
+                        <input type="text" id="trackCode" name="trackCode" autocomplete="off" maxlength="20" placeholder="Ej: PED_12345" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="trackPhone">Celular con el que pediste *</label>
+                        <input type="tel" id="trackPhone" name="trackPhone" autocomplete="tel-national" inputmode="tel" maxlength="20" placeholder="300 000 0000" required>
+                    </div>
+                </div>
+                <div id="trackMessage" class="msg" role="alert"></div>
+                <button type="submit" class="btn-checkout" id="trackButton">Consultar estado</button>
+            </form>
+            <div id="trackResult" tabindex="-1"></div>
+        </section>
+    </main>
+
+    <noscript><p style="text-align:center;color:#8A8A8A;padding:16px;">Para hacer pedidos en línea necesitas activar JavaScript en tu navegador.</p></noscript>
 
     <script src="domicilios.js"></script>
 </body>

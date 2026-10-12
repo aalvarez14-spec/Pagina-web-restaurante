@@ -1,30 +1,38 @@
 /**
- * Black & Gold Parrilla - Infraestructura en la Nube
- * Configuración e Inicialización Modular de Google Firebase & Cloud Firestore
+ * Fernando Parrilla - Infraestructura en la Nube
+ * Configuración e inicialización modular de Google Firebase y Cloud Firestore.
+ *
+ * Este archivo es un módulo ES: para usarlo, la página debe cargarlo (o cargar un script que lo importe)
+ * con <script type="module">. Por ahora las páginas simulan Firestore y no lo importan.
  */
 
-// 1. Importar los módulos necesarios desde la CDN oficial de Google
-import { initializeApp } from "https://gstatic.com";
-import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot } from "https://gstatic.com";
+// 1. Módulos oficiales desde la CDN de Google (fijar la versión evita cambios inesperados)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// 2. Objeto de configuración de tu proyecto en la consola de Firebase
-// (Estos valores los provee Google automáticamente al crear el proyecto en la web)
+// 2. Configuración del proyecto: cópiala desde Firebase Console > Configuración del proyecto > Tus apps.
+// Estos valores son de ejemplo y deben reemplazarse. La apiKey web de Firebase no es un secreto:
+// lo que protege los datos son las reglas de seguridad de Firestore (ver nota abajo).
 const firebaseConfig = {
-    apiKey: "AIzaSyA1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q",
-    authDomain: "://firebaseapp.com",
-    projectId: "corte-y-brasa-premium",
-    storageBucket: "://appspot.com",
-    messagingSenderId: "123456789012",
-    appId: "1:123456789012:web:a1b2c3d4e5f6g7h8i9j0k1"
+    apiKey: "REEMPLAZAR_CON_TU_API_KEY",
+    authDomain: "TU-PROYECTO.firebaseapp.com",
+    projectId: "TU-PROYECTO",
+    storageBucket: "TU-PROYECTO.appspot.com",
+    messagingSenderId: "REEMPLAZAR",
+    appId: "REEMPLAZAR"
 };
 
-// 3. Inicializar la aplicación en el ecosistema de Google
+// SEGURIDAD: antes de publicar, define reglas de Firestore y Firebase Authentication para que
+//  - los clientes solo puedan CREAR pedidos y reservas (y leer los suyos),
+//  - y solo los administradores puedan leer todo y cambiar estados, menú e información del restaurante.
+
+// 3. Inicializar la aplicación
 const app = initializeApp(firebaseConfig);
 
-// 4. Inicializar la base de datos NoSQL en tiempo real (Cloud Firestore)
+// 4. Inicializar Cloud Firestore
 const db = getFirestore(app);
 
-console.log("[Google Cloud Infra]: Ecosistema Firebase inicializado correctamente.");
+console.log("[Google Cloud Infra]: Firebase inicializado.");
 
-// Exportamos las referencias esenciales para usarlas en los formularios y el panel de administración
-export { db, collection, addDoc, doc, updateDoc, onSnapshot };
+// Referencias que usarán los formularios y el panel de administración
+export { db, collection, addDoc, doc, updateDoc, onSnapshot, serverTimestamp };
