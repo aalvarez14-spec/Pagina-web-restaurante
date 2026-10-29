@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos a Domicilio Premium | Corte & Brasa</title>
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@600&amp;display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --carbono-mate: #121212;
+            --carbono-superficie: #1E1E1E;
+            --oro-viejo: #D4AF37;
+            --texto-claro: #F5F5F5;
+            --texto-mutado: #8A8A8A;
+        }
+
+        body { background-color: var(--carbono-mate); color: var(--texto-claro); font-family: 'Inter', sans-serif; margin: 0; }
+
+        /* --- NAVBAR PREMIUM --- */
+        .premium-navbar {
+            background-color: rgba(18, 18, 18, 0.95);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-logo { font-family: 'Playfair Display', serif; color: var(--oro-viejo); font-size: 1.4rem; text-decoration: none; letter-spacing: 1px; }
+        .navbar-links { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
+        .navbar-item a { color: var(--texto-claro); text-decoration: none; font-size: 0.9rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; padding: 8px 0; border-bottom: 2px solid transparent; }
+        .navbar-item.active a, .navbar-item a:hover { color: var(--oro-viejo); border-color: var(--oro-viejo); }
+
+        .checkout-container { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; }
+        @media (max-width: 768px) { .checkout-container { grid-template-columns: 1fr; } }
+
+        header { grid-column: 1 / -1; text-align: center; }
+        header h1 { font-family: 'Playfair Display', serif; color: var(--oro-viejo); font-size: 2.5rem; margin: 0; }
+        .subtitle { color: var(--texto-mutado); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
+
+        .panel-form, .panel-summary { background-color: var(--carbono-superficie); border-radius: 8px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); height: fit-content; }
+        h2 { font-size: 1.2rem; color: var(--oro-viejo); margin-top: 0; margin-bottom: 25px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 10px; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-group { display: flex; flex-direction: column; margin-bottom: 20px; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        label { font-size: 0.85rem; margin-bottom: 8px; }
+
+        input[type="text"], input[type="tel"], select, textarea { background-color: var(--carbono-mate); border: 1px solid rgba(212, 175, 55, 0.2); color: var(--texto-claro); padding: 12px; border-radius: 4px; font-size: 0.95rem; outline: none; }
+        input[type="text"]:focus, input[type="tel"]:focus, select:focus { border-color: var(--oro-viejo); }
+        textarea { resize: none; height: 60px; }
+
+        /* Resumen */
+        .order-items-list { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
+        .order-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; border-bottom: 1px solid rgba(255, 255, 255, 0.03); padding-bottom: 12px; }
+        .item-details span { color: var(--texto-mutado); font-size: 0.8rem; }
+        
+        .pricing-totals { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(212, 175, 55, 0.1); padding-top: 20px; margin-bottom: 25px; }
+        .total-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--texto-mutado); }
+        .total-row.grand-total { font-size: 1.2rem; color: var(--oro-viejo); font-weight: 700; }
+
+        .btn-checkout { background-color: transparent; border: 1px solid var(--oro-viejo); color: var(--oro-viejo); padding: 15px; font-size: 0.95rem; font-weight: 600; text-transform: uppercase; width: 100%; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; }
+        .btn-checkout:hover { background-color: var(--oro-viejo); color: var(--carbono-mate); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: var(--carbono-mate); border-bottom: 1px solid rgba(212, 175, 55, 0.1);">
+      <div class="container">
+        <a class="navbar-brand" href="index.html" style="font-family: 'Playfair Display', Georgia, serif; color: var(--oro-viejo);">Fernando Parrilla</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navDom" aria-controls="navDom" aria-expanded="false" aria-label="Mostrar navegación">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navDom">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+            <li class="nav-item"><a class="nav-link" href="menu.html">Menú</a></li>
+            <li class="nav-item"><a class="nav-link" href="reservas.html">Reservas</a></li>
+            <li class="nav-item"><a class="nav-link active" href="domicilios.html">Domicilios</a></li>
+            <li class="nav-item"><a class="nav-link" href="admin.html">Admin</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="checkout-container">
+        <header>
+            <h1>Corte & Brasa</h1>
+            <p class="subtitle">Experiencia Gastronómica en Casa</p>
+        </header>
+
+        <main class="panel-form">
+            <h2>1. Datos de Entrega</h2>
+            <form id="deliveryForm">
+                <div class="form-row">
+                    <div class="form-group"><label for="fullName">Nombre Completo *</label><input type="text" id="fullName" required></div>
+                    <div class="form-group"><label for="phone">Teléfono *</label><input type="tel" id="phone" required></div>
+                </div>
+                <div class="form-group"><label for="address">Dirección *</label><input type="text" id="address" required></div>
+                <div class="form-row">
+                    <div class="form-group"><label for="apt">Apto / Casa</label><input type="text" id="apt"></div>
+                    <div class="form-group"><label for="neighborhood">Barrio *</label><input type="text" id="neighborhood" required></div>
+                </div>
+                <div class="form-group"><label for="notes">Indicaciones</label><textarea id="notes"></textarea></div>
+                
+                <h2>2. Método de Pago</h2>
+                <div class="form-group">
+                    <select id="paymentMethod" required>
+                        <option value="cash">Efectivo (Contra entrega)</option>
+                        <option value="dataphone">Datáfono (Contra entrega)</option>
+                    </select>
+                </div>
+            </form>
+        </main>
+
+        <aside class="panel-summary">
+            <h2>Resumen del Pedido</h2>
+            <div class="order-items-list">
+                <!-- Se inyecta dinámicamente con domicilios.js -->
+            </div>
+            <div class="pricing-totals">
+                <div class="total-row"><span>Subtotal</span><span id="subtotal">$0</span></div>
+                <div class="total-row"><span>Envío</span><span id="shipping">$5.000</span></div>
+                <div class="total-row grand-total"><span>Total</span><span id="grandTotal">$0</span></div>
+            </div>
+            <button type="submit" form="deliveryForm" class="btn-checkout">Confirmar Pedido</button>
+        </aside>
+    </div>
+
+    <script src="domicilios.js"></script>
+  <footer style="background-color: var(--carbono-mate); border-top: 1px solid rgba(212,175,55,0.1); padding: 24px 0; color: var(--texto-mutado);">
+    <div class="container text-center">
+      <p class="mb-0">© 2026 Fernando Parrilla · Todos los derechos reservados</p>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

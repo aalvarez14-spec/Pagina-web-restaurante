@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <title>Menú | Fernando Parrilla</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:wght@600&amp;display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root { --carbono-oscuro:#0B0B0B; --carbono-mate:#121212; --carbono-superficie:#1E1E1E; --oro-viejo:#D4AF37; --texto-claro:#F5F5F5; --texto-mutado:#8A8A8A; --borde-oro:rgba(212,175,55,0.3); }
+    body { margin:0; background:var(--carbono-oscuro); color:var(--texto-claro); font-family:'Inter',system-ui,sans-serif; }
+    .navbar { background-color: var(--carbono-mate) !important; border-bottom: 1px solid rgba(212, 175, 55, 0.1); }
+    .navbar-brand, .nav-link { color: var(--texto-claro) !important; }
+    .nav-link:hover, .nav-link.active { color: var(--oro-viejo) !important; }
+    .section { padding: 64px 0; }
+    .section-title { font-family: 'Playfair Display', Georgia, serif; color: var(--oro-viejo); font-size: 2rem; }
+    .card-dark { background-color: var(--carbono-superficie); border: 1px solid var(--borde-oro); border-radius: 12px; }
+    footer { background-color: var(--carbono-mate); border-top: 1px solid rgba(212,175,55,0.1); padding: 24px 0; color: var(--texto-mutado); }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: var(--carbono-mate); border-bottom: 1px solid rgba(212, 175, 55, 0.1);">
+    <div class="container">
+      <a class="navbar-brand" href="index.html" style="font-family: 'Playfair Display', Georgia, serif; color: var(--oro-viejo);">Fernando Parrilla</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Mostrar navegación">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link active" href="menu.html">Menú</a></li>
+          <li class="nav-item"><a class="nav-link" href="reservas.html">Reservas</a></li>
+          <li class="nav-item"><a class="nav-link" href="domicilios.html">Domicilios</a></li>
+          <li class="nav-item"><a class="nav-link" href="admin.html">Admin</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <section class="section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h1 class="section-title">Nuestro Menú</h1>
+        <p style="color: var(--texto-mutado);">Platos preparados con ingredientes frescos. Precios por definir.</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_193514_928.png" class="card-img-top" alt="Plato 1" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 1</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Corte premium a la parrilla con guarnición de la casa.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_193522_778.png" class="card-img-top" alt="Plato 2" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 2</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Jugosa carne asada con papas criollas.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_193534_918.png" class="card-img-top" alt="Plato 3" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 3</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Hamburguesa artesanal con queso y vegetales frescos.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_193845_719.png" class="card-img-top" alt="Plato 4" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 4</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Bebida refrescante para acompañar tu comida.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_193847_312.png" class="card-img-top" alt="Plato 5" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 5</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Entrada tradicional con salsa especial.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_193849_477.png" class="card-img-top" alt="Plato 6" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 6</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Plato fuerte con arroz y ensalada.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_194152_536.png" class="card-img-top" alt="Plato 7" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 7</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Corte de carne con chimichurri casero.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_194154_785.png" class="card-img-top" alt="Plato 8" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 8</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Bebida fría de la casa.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_194156_931.png" class="card-img-top" alt="Plato 9" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 9</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Acompañamiento crujiente y sabroso.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_194505_653.png" class="card-img-top" alt="Plato 10" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 10</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Plato especial del chef.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_194507_692.png" class="card-img-top" alt="Plato 11" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 11</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Carne a la brasa con vegetales asados.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_194509_911.png" class="card-img-top" alt="Plato 12" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 12</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Hamburguesa doble con tocineta.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_195533_894.png" class="card-img-top" alt="Plato 13" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 13</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Entrada ligera y fresca.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_195535_833.png" class="card-img-top" alt="Plato 14" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 14</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Bebida tropical.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_195538_822.png" class="card-img-top" alt="Plato 15" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 15</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Plato familiar para compartir.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_201015_696.png" class="card-img-top" alt="Plato 16" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 16</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Corte jugoso con papas a la francesa.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_201016_930.png" class="card-img-top" alt="Plato 17" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 17</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Ensalada fresca con aderezo de la casa.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>        <div class="col-md-4 col-sm-6">
+          <div class="card-dark h-100">
+            <img src="assets/menu/IMG_20261027_201019_218.png" class="card-img-top" alt="Plato 18" style="border-radius:12px 12px 0 0; height:220px; object-fit:cover;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--oro-viejo);">Plato 18</h5>
+              <p class="card-text" style="color: var(--texto-mutado);">Bebida gaseosa fría.</p>
+              <p class="mb-0" style="color: var(--texto-claro); font-weight:600;">Precio: Por definir</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="container text-center">
+      <p class="mb-0">© 2026 Fernando Parrilla · Todos los derechos reservados</p>
+    </div>
+  </footer>
+  <script>
+    (function(){
+      try {
+        const saved = JSON.parse(localStorage.getItem('orearte_menu') || '[]');
+        const map = {};
+        saved.forEach(s => map[s.id] = s.precio);
+        document.querySelectorAll('.card').forEach((card, idx) => {
+          const id = idx + 1;
+          const savedItem = saved.find(s => s.id === id);
+          if (savedItem) {
+            if (savedItem.precio) {
+              const priceEl = card.querySelector('.card-body p.mb-0');
+              if (priceEl) priceEl.textContent = 'Precio: ' + savedItem.precio;
+            }
+            if (savedItem.desc) {
+              const descEl = card.querySelector('.card-text');
+              if (descEl) descEl.textContent = savedItem.desc;
+            }
+          }
+        });
+      } catch(e){}
+    })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
