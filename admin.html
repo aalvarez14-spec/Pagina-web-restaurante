@@ -3,6 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Guard de acceso: exige la sesión iniciada desde index.html (no modificar) -->
+  <script>
+    (function () {
+      var autenticado = null;
+      try {
+        autenticado = sessionStorage.getItem('fp_admin_auth') === '1';
+      } catch (e) {
+        autenticado = null; // Sin acceso a storage: no bloquear el panel
+      }
+      if (autenticado === false) {
+        window.location.replace('index.html#acceso-admin');
+      }
+    })();
+  </script>
   <title>Gestionar pedidos | Fernando Parrilla</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -189,6 +203,7 @@
           <li class="nav-item"><a class="nav-link" href="reservas.html">Reservas</a></li>
           <li class="nav-item"><a class="nav-link" href="domicilios.html">Domicilios</a></li>
           <li class="nav-item"><a class="nav-link active" href="admin.html">Admin</a></li>
+          <li class="nav-item" id="itemSalir" hidden><a class="nav-link" href="#" id="navLogoutLink">Salir</a></li>
         </ul>
       </div>
     </div>
@@ -236,7 +251,8 @@
 
     <section id="vista-menu" class="vista" aria-labelledby="titulo-vista" hidden>
       <div class="toolbar">
-        <button type="button" class="btn btn-sec" id="guardar-menu">Guardar precios</button>
+        <button type="button" class="btn btn-sec" id="guardar-menu">Guardar cambios</button>
+        <button type="button" class="btn btn-sec" id="restablecer-menu">Restablecer</button>
       </div>
       <div class="lista" id="lista-menu" tabindex="-1"></div>
     </section>
@@ -874,10 +890,12 @@
         { id: 17, img: 'assets/menu/IMG_20261027_201016_930.png', nombre: 'Plato 17', desc: 'Ensalada fresca con aderezo de la casa.', precio: '' },
         { id: 18, img: 'assets/menu/IMG_20261027_201019_218.png', nombre: 'Plato 18', desc: 'Bebida gaseosa fría.', precio: '' }
       ];
+      // Respaldo de los valores originales para el botón "Restablecer"
+      const menuItemsOriginales = menuItems.map((m) => ({ ...m }));
       try {
         const saved = JSON.parse(localStorage.getItem(MENU_KEY) || '[]');
         if (Array.isArray(saved) && saved.length) {
-          saved.forEach((s) => { const m = menuItems.find((x) => x.id === s.id); if (m) { m.precio = s.precio || ''; if (s.desc) m.desc = s.desc; } });
+          saved.forEach((s) => { const m = menuItems.find((x) => x.id === s.id); if (m) { if (s.nombre) m.nombre = s.nombre; m.precio = s.precio || ''; if (s.desc) m.desc = s.desc; } });
         }
       } catch (e) { console.error(e); }
       function renderMenu() {
@@ -885,12 +903,18 @@
         if (!lista) return;
         lista.replaceChildren(...menuItems.map((m) => h('div', { class: 'card', style: 'padding:12px;' },
           h('img', { src: m.img, alt: m.nombre, style: 'width:100%; height:160px; object-fit:cover; border-radius:8px; margin-bottom:8px;' }),
-          h('strong', {}, m.nombre),
+          h('label', { class: 'campo' }, 'Nombre', h('input', { type: 'text', value: m.nombre, 'data-nombre-id': m.id, placeholder: 'Ej: Carne asada con papas' })),
           h('label', { class: 'campo' }, 'Descripción', h('textarea', { 'data-desc-id': m.id, style: 'min-height:60px;' }, m.desc)),
           h('label', { class: 'campo' }, 'Precio', h('input', { type: 'text', value: m.precio, 'data-id': m.id, placeholder: 'Ej: 25000' }))
         )));
       }
       $('#guardar-menu')?.addEventListener('click', () => {
+        const nombres = $$('#lista-menu input[data-nombre-id]');
+        nombres.forEach((inp) => {
+          const m = menuItems.find((x) => x.id === parseInt(inp.dataset.nombreId, 10));
+          const valor = inp.value.trim();
+          if (m && valor) m.nombre = valor; // si está vacío, conserva el nombre anterior
+        });
         const inputs = $$('#lista-menu input[data-id]');
         inputs.forEach((inp) => {
           const m = menuItems.find((x) => x.id === parseInt(inp.dataset.id, 10));
@@ -901,8 +925,22 @@
           const m = menuItems.find((x) => x.id === parseInt(ta.dataset.descId, 10));
           if (m) m.desc = ta.value;
         });
-        try { const data = menuItems.map(function(m){ return { id: m.id, precio: m.precio, desc: m.desc }; }); localStorage.setItem(MENU_KEY, JSON.stringify(data)); } catch (e) { console.error(e); }
-        toast('Precios del menú guardados.', 'ok');
+        try { const data = menuItems.map(function(m){ return { id: m.id, nombre: m.nombre, precio: m.precio, desc: m.desc }; }); localStorage.setItem(MENU_KEY, JSON.stringify(data)); } catch (e) { console.error(e); }
+        toast('Cambios del menú guardados.', 'ok');
+      });
+
+      $('#restablecer-menu')?.addEventListener('click', async () => {
+        const ok = await confirmar({
+          titulo: 'Restablecer menú',
+          mensaje: 'Se borrarán los nombres, precios y descripciones guardados. El menú volverá a sus valores originales.',
+          textoConfirmar: 'Restablecer',
+          peligro: true
+        });
+        if (!ok) return;
+        try { localStorage.removeItem(MENU_KEY); } catch (e) { console.error(e); }
+        menuItems.forEach((m, i) => Object.assign(m, menuItemsOriginales[i]));
+        renderMenu();
+        toast('Menú restablecido a los valores originales.', 'ok');
       });
 
       function renderActual() {
@@ -963,6 +1001,7 @@
       iniciar();
     })();
   </script>
+  <script src="sesion.js"></script>
   <footer style="background-color: var(--carbono-mate); border-top: 1px solid rgba(212,175,55,0.1); padding: 24px 0; color: var(--texto-mutado);">
     <div class="container text-center">
       <p class="mb-0">© 2026 Fernando Parrilla · Todos los derechos reservados</p>

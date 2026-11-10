@@ -35,6 +35,7 @@
           <li class="nav-item"><a class="nav-link" href="reservas.html">Reservas</a></li>
           <li class="nav-item"><a class="nav-link" href="domicilios.html">Domicilios</a></li>
           <li class="nav-item"><a class="nav-link" href="admin.html">Admin</a></li>
+          <li class="nav-item" id="itemSalir" hidden><a class="nav-link" href="#" id="navLogoutLink">Salir</a></li>
         </ul>
       </div>
     </div>
@@ -219,28 +220,48 @@
   </footer>
   <script>
     (function(){
-      try {
-        const saved = JSON.parse(localStorage.getItem('orearte_menu') || '[]');
-        const map = {};
-        saved.forEach(s => map[s.id] = s.precio);
-        document.querySelectorAll('.card').forEach((card, idx) => {
-          const id = idx + 1;
-          const savedItem = saved.find(s => s.id === id);
-          if (savedItem) {
-            if (savedItem.precio) {
-              const priceEl = card.querySelector('.card-body p.mb-0');
-              if (priceEl) priceEl.textContent = 'Precio: ' + savedItem.precio;
-            }
-            if (savedItem.desc) {
-              const descEl = card.querySelector('.card-text');
-              if (descEl) descEl.textContent = savedItem.desc;
-            }
-          }
+      // Guardamos los valores originales del HTML para poder restablecerlos
+      const tarjetas = Array.from(document.querySelectorAll('.card-dark'));
+      const originales = tarjetas.map(function (card) {
+        return {
+          nombre: (card.querySelector('.card-title') || {}).textContent || '',
+          desc: (card.querySelector('.card-text') || {}).textContent || '',
+          precio: (card.querySelector('.card-body p.mb-0') || {}).textContent || '',
+          alt: (card.querySelector('img') || {}).alt || ''
+        };
+      });
+
+      function aplicarMenu() {
+        let saved = [];
+        try { saved = JSON.parse(localStorage.getItem('orearte_menu') || '[]'); } catch (e) { saved = []; }
+        if (!Array.isArray(saved)) saved = [];
+        tarjetas.forEach(function (card, idx) {
+          const base = originales[idx];
+          const s = saved.find(function (item) { return item && item.id === idx + 1; }) || {};
+          const nombre = s.nombre || base.nombre;
+          const desc = s.desc || base.desc;
+          const precio = s.precio ? 'Precio: ' + s.precio : base.precio;
+          const titleEl = card.querySelector('.card-title');
+          if (titleEl) titleEl.textContent = nombre;
+          const descEl = card.querySelector('.card-text');
+          if (descEl) descEl.textContent = desc;
+          const priceEl = card.querySelector('.card-body p.mb-0');
+          if (priceEl) priceEl.textContent = precio;
+          const img = card.querySelector('img');
+          if (img) img.alt = nombre;
         });
-      } catch(e){}
+      }
+
+      aplicarMenu();
+
+      // Actualización en vivo: cuando el admin guarda en otra pestaña
+      window.addEventListener('storage', function (e) {
+        if (e.key === 'orearte_menu' || e.key === null) aplicarMenu();
+      });
     })();
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="sesion.js"></script>
 </body>
 </html>
 

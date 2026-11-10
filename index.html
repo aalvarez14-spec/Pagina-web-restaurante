@@ -49,6 +49,57 @@
     .feature-icon { font-size: 2rem; color: var(--oro-viejo); }
     .gallery img { border-radius: 12px; transition: transform .3s ease; }
     .gallery img:hover { transform: scale(1.03); }
+
+    /* ===== Modal de acceso administrativo ===== */
+    .modal-content.modal-admin {
+      background-color: var(--carbono-superficie);
+      border: 1px solid var(--borde-oro);
+      border-radius: 16px;
+      color: var(--texto-claro);
+      overflow: hidden;
+    }
+    .modal-header-custom {
+      position: relative;
+      display: block;
+      padding: 26px 26px 0;
+      border-bottom: none;
+      text-align: center;
+    }
+    .modal-header-custom .btn-close { position: absolute; top: 14px; right: 14px; }
+    .login-lock {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--borde-oro);
+    }
+    .login-lock svg { width: 28px; height: 28px; fill: var(--oro-viejo); }
+    .modal-admin .modal-title { font-family: 'Playfair Display', Georgia, serif; color: var(--oro-viejo); }
+    .modal-subtitle { color: var(--texto-mutado); font-size: 0.9rem; margin-top: 4px; }
+    .modal-content.modal-admin .modal-body { padding: 14px 26px 26px; }
+    .form-label { font-size: 0.88rem; color: var(--texto-claro); margin-bottom: 6px; }
+    .form-admin {
+      background-color: var(--carbono-mate);
+      border: 1px solid rgba(212, 175, 55, 0.22);
+      border-radius: 10px;
+      color: var(--texto-claro);
+      padding: 11px 14px;
+      min-height: 44px;
+    }
+    .form-admin::placeholder { color: #6B6B6B; }
+    .form-admin:focus {
+      background-color: var(--carbono-mate);
+      color: var(--texto-claro);
+      border-color: var(--oro-viejo);
+      box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.15);
+    }
+    #loginError { border-radius: 10px; font-size: 0.88rem; }
+    .admin-actions { display: grid; gap: 10px; }
+
     footer { background-color: var(--carbono-mate); border-top: 1px solid rgba(212,175,55,0.1); padding: 28px 0; color: var(--texto-mutado); }
   </style>
 </head>
@@ -66,7 +117,8 @@
           <li class="nav-item"><a class="nav-link" href="menu.html">Menú</a></li>
           <li class="nav-item"><a class="nav-link" href="reservas.html">Reservas</a></li>
           <li class="nav-item"><a class="nav-link" href="domicilios.html">Domicilios</a></li>
-          <li class="nav-item"><a class="nav-link" href="admin.html">Admin</a></li>
+          <li class="nav-item"><a class="nav-link" href="admin.html" id="navAdminLink">Admin</a></li>
+          <li class="nav-item" id="itemSalir" hidden><a class="nav-link" href="#" id="navLogoutLink">Salir</a></li>
         </ul>
       </div>
     </div>
@@ -178,6 +230,177 @@
     </div>
   </footer>
 
+  <!-- ===== Modal de acceso administrativo ===== -->
+  <div class="modal fade" id="modalAdmin" tabindex="-1" aria-labelledby="modalAdminLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modal-admin">
+        <div class="modal-header-custom">
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          <div class="login-lock">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm-3 8V6a3 3 0 1 1 6 0v3H9z"/></svg>
+          </div>
+          <h5 class="modal-title" id="modalAdminLabel">Acceso administrativo</h5>
+          <p class="modal-subtitle mb-0">Ingresa tus credenciales para gestionar el restaurante</p>
+        </div>
+        <div class="modal-body">
+          <form id="formAdminLogin" novalidate>
+            <div class="mb-3 admin-field">
+              <label class="form-label" for="adminUser">Usuario</label>
+              <input class="form-control form-admin" type="text" id="adminUser" name="username" autocomplete="username" placeholder="Tu usuario" required>
+            </div>
+            <div class="mb-1 admin-field">
+              <label class="form-label" for="adminPass">Contraseña</label>
+              <input class="form-control form-admin" type="password" id="adminPass" name="password" autocomplete="current-password" placeholder="••••••••" required>
+            </div>
+            <div class="alert alert-danger mt-3 mb-0" id="loginError" role="alert" hidden></div>
+            <div class="admin-actions mt-4">
+              <button class="btn btn-gold btn-lg" type="submit" id="btnEntrar">Entrar</button>
+              <button class="btn btn-outline-gold" type="button" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="sesion.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      /* ===== Configuración del acceso admin (cambia aquí tus credenciales) ===== */
+      var AUTH_KEY = 'fp_admin_auth';
+      var ADMIN_URL = 'admin.html';
+      var CREDENCIALES = { usuario: 'admin', clave: 'admin123' };
+
+      var navLink = document.getElementById('navAdminLink');
+      var modalEl = document.getElementById('modalAdmin');
+      var modal = new bootstrap.Modal(modalEl);
+      var form = document.getElementById('formAdminLogin');
+      var inputUser = document.getElementById('adminUser');
+      var inputPass = document.getElementById('adminPass');
+      var errorBox = document.getElementById('loginError');
+      var btnEntrar = document.getElementById('btnEntrar');
+      var textoBtnOriginal = btnEntrar.textContent;
+      var animacionModal = null;
+
+      /* ---------- Sesión ---------- */
+      function haySesion() {
+        try { return sessionStorage.getItem(AUTH_KEY) === '1'; } catch (e) { return false; }
+      }
+      function guardarSesion() {
+        try { sessionStorage.setItem(AUTH_KEY, '1'); } catch (e) { /* sin storage: continúa igual */ }
+      }
+
+      /* ---------- Animaciones de entrada del modal (GSAP) ---------- */
+      function animarEntradaModal() {
+        if (!window.gsap) return;
+        if (animacionModal) animacionModal.kill();
+        animacionModal = gsap.timeline({ defaults: { ease: 'power3.out' } })
+          .fromTo('.modal-admin', { y: -46, opacity: 0, scale: 0.96 }, { y: 0, opacity: 1, scale: 1, duration: 0.5 })
+          .fromTo('.login-lock', { scale: 0, rotation: -20 }, { scale: 1, rotation: 0, duration: 0.5, ease: 'back.out(2.2)' }, '-=0.18')
+          .fromTo(['#modalAdminLabel', '.modal-subtitle'], { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.08 }, '-=0.22')
+          .fromTo('.admin-field', { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.1 }, '-=0.12')
+          .fromTo('.admin-actions .btn', { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, stagger: 0.08 }, '-=0.1')
+          .to('.login-lock svg', { scale: 1.07, duration: 1.1, repeat: -1, yoyo: true, ease: 'sine.inOut' }, '-=0.1');
+      }
+
+      /* ---------- Animación de error (sacudida + mensaje) ---------- */
+      function animarError() {
+        if (!window.gsap) return;
+        gsap.fromTo(errorBox, { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
+        gsap.timeline()
+          .to('.modal-admin', { x: -9, duration: 0.07 })
+          .to('.modal-admin', { x: 9, duration: 0.07 })
+          .to('.modal-admin', { x: -6, duration: 0.07 })
+          .to('.modal-admin', { x: 6, duration: 0.07 })
+          .to('.modal-admin', { x: 0, duration: 0.14, ease: 'power2.out' });
+      }
+
+      function mostrarError(mensaje) {
+        errorBox.textContent = mensaje;
+        errorBox.hidden = false;
+        animarError();
+      }
+      function ocultarError() {
+        errorBox.hidden = true;
+        errorBox.textContent = '';
+      }
+
+      /* ---------- Validación del formulario ---------- */
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        ocultarError();
+
+        var usuario = inputUser.value.trim();
+        var clave = inputPass.value;
+
+        if (!usuario || !clave) {
+          mostrarError('Por favor completa el usuario y la contraseña.');
+          return;
+        }
+
+        btnEntrar.disabled = true;
+        btnEntrar.textContent = 'Verificando…';
+
+        // Pequeña pausa para que se sienta la verificación
+        window.setTimeout(function () {
+          if (usuario === CREDENCIALES.usuario && clave === CREDENCIALES.clave) {
+            guardarSesion();
+            btnEntrar.textContent = '¡Bienvenido!';
+            if (window.gsap) {
+              gsap.fromTo(btnEntrar, { scale: 1 }, { scale: 1.04, duration: 0.18, yoyo: true, repeat: 1, ease: 'power2.out' });
+            }
+            window.setTimeout(function () {
+              window.location.href = ADMIN_URL;
+            }, 750);
+          } else {
+            btnEntrar.disabled = false;
+            btnEntrar.textContent = textoBtnOriginal;
+            mostrarError('Usuario o contraseña incorrectos. Intenta de nuevo.');
+            inputPass.value = '';
+            inputPass.focus();
+          }
+        }, 650);
+      });
+
+      // Ocultar el error al volver a escribir
+      [inputUser, inputPass].forEach(function (campo) {
+        campo.addEventListener('input', ocultarError);
+      });
+
+      /* ---------- Comportamiento del enlace "Admin" ---------- */
+      navLink.addEventListener('click', function (e) {
+        if (haySesion()) return; // Ya autenticado: navega normal a admin.html
+        e.preventDefault();
+        ocultarError();
+        form.reset();
+        btnEntrar.disabled = false;
+        btnEntrar.textContent = textoBtnOriginal;
+        modal.show();
+      });
+
+      modalEl.addEventListener('shown.bs.modal', animarEntradaModal);
+      modalEl.addEventListener('hidden.bs.modal', function () {
+        if (animacionModal) animacionModal.kill();
+        if (window.gsap) gsap.set('.modal-admin', { clearProps: 'all' });
+      });
+
+      /* ---------- Si llegaste redirigido desde admin.html, abre el modal ---------- */
+      if (window.location.hash === '#acceso-admin') {
+        try { history.replaceState(null, '', window.location.pathname + window.location.search); } catch (e) {}
+        window.setTimeout(function () { navLink.click(); }, 400);
+      }
+
+      /* ---------- Animación de entrada del inicio (GSAP) ---------- */
+      if (window.gsap) {
+        gsap.timeline({ defaults: { ease: 'power3.out' } })
+          .from('.navbar', { opacity: 0, duration: 0.5 })
+          .from('.hero-content > *', { y: 28, opacity: 0, duration: 0.55, stagger: 0.1 }, '-=0.2');
+      }
+    })();
+  </script>
 </body>
 </html>
