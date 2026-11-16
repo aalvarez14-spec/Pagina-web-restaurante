@@ -20,7 +20,6 @@
 
         body { background-color: var(--carbono-mate); color: var(--texto-claro); font-family: 'Inter', sans-serif; margin: 0; }
 
-        /* --- NAVBAR PREMIUM --- */
         .premium-navbar {
             background-color: rgba(18, 18, 18, 0.95);
             border-bottom: 1px solid rgba(212, 175, 55, 0.15);
@@ -60,15 +59,33 @@
 
         /* Resumen */
         .order-items-list { display: flex; flex-direction: column; gap: 15px; margin-bottom: 25px; }
-        .order-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; border-bottom: 1px solid rgba(255, 255, 255, 0.03); padding-bottom: 12px; }
+        .order-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; border-bottom: 1px solid rgba(255, 255, 255, 0.03); padding-bottom: 12px; gap: 10px; }
         .item-details span { color: var(--texto-mutado); font-size: 0.8rem; }
-        
+        .qty-controls { display: flex; align-items: center; gap: 6px; }
+        .qty-btn { background: transparent; border: 1px solid var(--oro-viejo); color: var(--oro-viejo); width: 26px; height: 26px; border-radius: 4px; cursor: pointer; font-weight: 700; }
+        .qty-btn:hover { background: var(--oro-viejo); color: var(--carbono-mate); }
+        .remove-btn { background: transparent; border: none; color: #FF6B5E; cursor: pointer; font-size: 1.1rem; }
+
         .pricing-totals { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid rgba(212, 175, 55, 0.1); padding-top: 20px; margin-bottom: 25px; }
         .total-row { display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--texto-mutado); }
         .total-row.grand-total { font-size: 1.2rem; color: var(--oro-viejo); font-weight: 700; }
 
         .btn-checkout { background-color: transparent; border: 1px solid var(--oro-viejo); color: var(--oro-viejo); padding: 15px; font-size: 0.95rem; font-weight: 600; text-transform: uppercase; width: 100%; border-radius: 4px; cursor: pointer; transition: all 0.3s ease; }
         .btn-checkout:hover { background-color: var(--oro-viejo); color: var(--carbono-mate); }
+        .btn-checkout:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Métodos de pago radio estilizados */
+        .payment-options { display: flex; gap: 12px; }
+        .payment-option { flex: 1; position: relative; }
+        .payment-option input { position: absolute; opacity: 0; }
+        .payment-option label { display: block; padding: 14px; border: 1px solid rgba(212,175,55,0.2); border-radius: 6px; text-align: center; cursor: pointer; color: var(--texto-mutado); transition: all .2s; }
+        .payment-option input:checked + label { border-color: var(--oro-viejo); color: var(--oro-viejo); background: rgba(212,175,55,0.08); }
+        .payment-option label:hover { border-color: var(--oro-viejo); }
+
+        /* Modal éxito */
+        .modal-content.modal-success { background-color: var(--carbono-superficie); border: 1px solid var(--borde-oro); border-radius: 16px; color: var(--texto-claro); }
+        .modal-success .modal-title { font-family: 'Playfair Display', Georgia, serif; color: var(--oro-viejo); }
+        .modal-success .btn-close { filter: invert(1); }
     </style>
 </head>
 <body>
@@ -100,7 +117,7 @@
 
         <main class="panel-form">
             <h2>1. Datos de Entrega</h2>
-            <form id="deliveryForm">
+            <form id="deliveryForm" novalidate>
                 <div class="form-row">
                     <div class="form-group"><label for="fullName">Nombre Completo *</label><input type="text" id="fullName" required></div>
                     <div class="form-group"><label for="phone">Teléfono *</label><input type="tel" id="phone" required></div>
@@ -113,20 +130,22 @@
                 <div class="form-group"><label for="notes">Indicaciones</label><textarea id="notes"></textarea></div>
                 
                 <h2>2. Método de Pago</h2>
-                <div class="form-group">
-                    <select id="paymentMethod" required>
-                        <option value="cash">Efectivo (Contra entrega)</option>
-                        <option value="dataphone">Datáfono (Contra entrega)</option>
-                    </select>
+                <div class="payment-options">
+                    <div class="payment-option">
+                        <input type="radio" name="paymentMethod" id="payCash" value="Efectivo" required>
+                        <label for="payCash">Efectivo</label>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio" name="paymentMethod" id="payCard" value="Datáfono" required>
+                        <label for="payCard">Datáfono</label>
+                    </div>
                 </div>
             </form>
         </main>
 
         <aside class="panel-summary">
             <h2>Resumen del Pedido</h2>
-            <div class="order-items-list">
-                <!-- Se inyecta dinámicamente con domicilios.js -->
-            </div>
+            <div class="order-items-list"></div>
             <div class="pricing-totals">
                 <div class="total-row"><span>Subtotal</span><span id="subtotal">$0</span></div>
                 <div class="total-row"><span>Envío</span><span id="shipping">$5.000</span></div>
@@ -134,6 +153,19 @@
             </div>
             <button type="submit" form="deliveryForm" class="btn-checkout">Confirmar Pedido</button>
         </aside>
+    </div>
+
+    <!-- Modal éxito -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-success">
+          <div class="modal-header border-0">
+            <h5 class="modal-title">Pedido confirmado</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body" id="successBody"></div>
+        </div>
+      </div>
     </div>
 
     <script src="domicilios.js"></script>
@@ -146,4 +178,3 @@
   <script src="sesion.js"></script>
 </body>
 </html>
-
