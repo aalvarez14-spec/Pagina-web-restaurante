@@ -80,7 +80,6 @@
         grandTotalLabel.textContent = formatearMoneda(granTotal);
         if (checkoutButton) { checkoutButton.disabled = false; checkoutButton.style.opacity = '1'; checkoutButton.style.cursor = 'pointer'; }
 
-        // Delegación de eventos
         orderItemsContainer.querySelectorAll('[data-action]').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const id = e.currentTarget.getAttribute('data-id');
@@ -92,7 +91,6 @@
         });
     }
 
-    // Validación y checkout
     if (form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -101,7 +99,6 @@
                 alert('Tu carrito está vacío.');
                 return;
             }
-            // Validación HTML5
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
@@ -135,7 +132,6 @@
             }
             if (successModal) successModal.show();
 
-            // Limpiar carrito tras confirmar
             localStorage.removeItem('carrito_parrilla');
             window.dispatchEvent(new Event('storage'));
             if (form) form.reset();
@@ -143,9 +139,6 @@
         });
     }
 
-    // Cerrar modal y resetear? ya render.
     render();
-
-    // Re-render si cambia storage desde otra pestaña
     window.addEventListener('storage', render);
 });

@@ -51,7 +51,6 @@
         window.dispatchEvent(new Event('storage'));
     }
 
-    // Abrir modal al hacer clic en la tarjeta
     cards.forEach(card => {
         card.addEventListener('click', () => {
             if (card.classList.contains('out-of-stock')) return;
@@ -76,10 +75,7 @@
         });
     }
 
-    // Escuchar cambios de storage para actualizar badge en tiempo real
     window.addEventListener('storage', actualizarBadge);
-    // También actualizar cuando otra pestaña cambia
     setInterval(actualizarBadge, 1000);
-
     actualizarBadge();
 });

@@ -20,17 +20,15 @@
     .card-dark { background-color: var(--carbono-superficie); border: 1px solid var(--borde-oro); border-radius: 12px; }
     footer { background-color: var(--carbono-mate); border-top: 1px solid rgba(212,175,55,0.1); padding: 24px 0; color: var(--texto-mutado); }
 
-    /* Hover tarjetas */
     .menu-item-card { cursor: pointer; transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; overflow: hidden; }
-    .item-desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
     .menu-item-card:hover { transform: translateY(-6px); box-shadow: 0 12px 28px rgba(212,175,55,0.15); border-color: var(--oro-viejo); }
     .menu-img-wrap { position: relative; overflow: hidden; border-radius: 12px 12px 0 0; }
     .menu-img { transition: transform .45s ease; display: block; width: 100%; height: 220px; object-fit: cover; }
     .menu-item-card:hover .menu-img { transform: scale(1.05); }
     .menu-hover-badge { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%) translateY(12px); opacity: 0; transition: all .3s ease; background: rgba(11,11,11,0.85); color: var(--oro-viejo); padding: 6px 14px; border-radius: 20px; font-size: .8rem; font-weight: 600; border: 1px solid var(--oro-viejo); pointer-events: none; white-space: nowrap; }
     .menu-item-card:hover .menu-hover-badge { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .item-desc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
 
-    /* Modal vista rápida */
     .modal-content.modal-menu { background-color: var(--carbono-superficie); border: 1px solid var(--borde-oro); border-radius: 16px; color: var(--texto-claro); }
     .modal-menu .modal-title { font-family: 'Playfair Display', Georgia, serif; color: var(--oro-viejo); }
     .modal-menu img { width: 100%; height: 260px; object-fit: cover; border-radius: 12px; margin-bottom: 16px; }
@@ -67,183 +65,182 @@
         <p style="color: var(--texto-mutado);">Platos preparados con ingredientes frescos. Haz clic en un plato para ver el detalle y ordenar.</p>
       </div>
       <div class="row g-4">
-        <!-- Tarjetas generadas con estructura estándar -->
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="1" data-category="Carnes">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_193514_928.png" class="menu-img" alt="Plato 1"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="1">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_193514_928.png" class="menu-img" alt="Costillar de Res Braseado al Carbón"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 1</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Corte premium a la parrilla con guarnición de la casa.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Costillar de Res Braseado al Carbón</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Imponente corte de costilla de res con hueso, sellado lentamente sobre brasas vivas hasta lograr una costra exterior caramelizada y ahumada. Su interior conserva toda la jugosidad y terneza del marmoleo natural de la carne, resaltado con sal gruesa y pimienta recién molida.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$35.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="2" data-category="Carnes">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_193522_778.png" class="menu-img" alt="Plato 2"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="2">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_193522_778.png" class="menu-img" alt="Picaña Madurada con Chorizo y Chimichurri"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 2</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Jugosa carne asada con papas criollas.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Picaña Madurada con Chorizo y Chimichurri</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Generoso corte de picaña asado al término perfecto, presentado en láminas gruesas y jugosas sobre piedra volcánica. Se acompaña con un chorizo artesanal dorado a la brasa, arepa santandereana asada al carbón y un bowl de chimichurri fresco de hierbas y ajo.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$32.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="3" data-category="Hamburguesas">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_193534_918.png" class="menu-img" alt="Plato 3"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="3">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_193534_918.png" class="menu-img" alt="Bife Angosto en Tabla Rústica"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 3</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Hamburguesa artesanal con queso y vegetales frescos.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Bife Angosto en Tabla Rústica</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Corte grueso de lomo ancho sellado a fuego alto directamente sobre la parrilla de hierro, logrando un marcado profundo y aroma intenso a humo. Servido en tabla de madera rústica con sal marina en escamas y pimienta negra quebrada para disfrutar el sabor puro de la carne.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$28.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="4" data-category="Bebidas">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_193845_719.png" class="menu-img" alt="Plato 4"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="4">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_193845_719.png" class="menu-img" alt="Alitas Glaseadas a la Brasa"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 4</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Bebida refrescante para acompañar tu comida.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Alitas Glaseadas a la Brasa</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Crujientes alitas de pollo cocidas al calor del carbón y bañadas en un glaseado brillante tipo BBQ ahumado con un toque picante y semillas de ajonjolí. Se sirven humeantes sobre tabla de madera junto a un recipiente con salsa barbacoa especial de la casa.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$9.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="5" data-category="Entradas">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_193847_312.png" class="menu-img" alt="Plato 5"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="5">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_193847_312.png" class="menu-img" alt="Presas de Pollo Criollo al Carbón"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 5</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Entrada tradicional con salsa especial.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Presas de Pollo Criollo al Carbón</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Muslos y contramuslos de pollo marinados en adobo tradicional de especias y hierbas, dorados directamente sobre las brasas hasta obtener una piel crujiente y tostada. Su interior se mantiene tierno, jugoso e impregnado con el auténtico sabor del asador de leña.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$18.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="6" data-category="Platos fuertes">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_193849_477.png" class="menu-img" alt="Plato 6"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="6">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_193849_477.png" class="menu-img" alt="Pechuga y Alitas en Marinada de Hierbas"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 6</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Plato fuerte con arroz y ensalada.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Pechuga y Alitas en Marinada de Hierbas</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Pechuga de pollo jugosa fileteada y acompañada de alitas doradas, todo sazonado con una mezcla aromática de especias y hierbas finas a la parrilla. Se presenta sobre plato negro con chimichurri verde, romero fresco y cascos de limón asado al carbón.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$30.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="7" data-category="Carnes">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_194152_536.png" class="menu-img" alt="Plato 7"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="7">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_194152_536.png" class="menu-img" alt="Cazuela Tradicional de Carne y Tubérculos"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 7</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Corte de carne con chimichurri casero.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Cazuela Tradicional de Carne y Tubérculos</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Sustancioso caldo casero servido humeante en cazuela de barro rústica, preparado con trozos tiernos de carne, papa, yuca, maíz tierno y cilantro fresco picado. Se acompaña en la mesa con arepa dorada y cascos de limón para realzar su sabor tradicional.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$40.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="8" data-category="Bebidas">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_194154_785.png" class="menu-img" alt="Plato 8"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="8">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_194154_785.png" class="menu-img" alt="Ajiaco Santafereño Especial"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 8</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Bebida fría de la casa.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Ajiaco Santafereño Especial</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Sopa espesa y reconfortante elaborada con tres variedades de papa, pechuga de pollo desmechada y mazorca dulce entera. Se corona con crema de leche, alcaparras, cilantro fresco y tajadas de aguacate maduro, acompañada de arroz blanco y aguacate adicional.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$7.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="9" data-category="Acompañamientos">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_194156_931.png" class="menu-img" alt="Plato 9"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="9">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_194156_931.png" class="menu-img" alt="Sancocho Trifásico en Olla de Barro"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 9</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Acompañamiento crujiente y sabroso.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Sancocho Trifásico en Olla de Barro</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Clásico sancocho colombiano servido con presa entera de gallina o pollo dorado, trozos de yuca harinosa, plátano verde, papa y mazorca tierna. Decorado con aros frescos de cebolla blanca y cilantro en un caldo concentrado de cocción lenta.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$12.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="10" data-category="Especiales">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_194505_653.png" class="menu-img" alt="Plato 10"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="10">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_194505_653.png" class="menu-img" alt="Gran Parrillada Mixta del Maestro"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 10</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Plato especial del chef.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Gran Parrillada Mixta del Maestro</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Abundante selección en tabla circular de madera con cortes de res en láminas, chorizos parrilleros, morcilla, pollo asado y chicharrón crujiente. Viene acompañado de arepas asadas, rodajas de aguacate, yuca frita, cascos de limón, chimichurri y ají casero.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$45.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="11" data-category="Carnes">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_194507_692.png" class="menu-img" alt="Plato 11"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="11">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_194507_692.png" class="menu-img" alt="Festín Criollo para Compartir"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 11</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Carne a la brasa con vegetales asados.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Festín Criollo para Compartir</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Completa picada familiar con cubos de chicharrón carnudo, chorizo, morcilla, costilla, yuca frita dorada y tajadas de plátano maduro caramelizado. Incluye arepitas asadas, tomates cherry, aguacate fresco, limón, chimichurri y salsa criolla picante.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$38.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="12" data-category="Hamburguesas">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_194509_911.png" class="menu-img" alt="Plato 12"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="12">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_194509_911.png" class="menu-img" alt="Maicitos Gratinados con Chicharrón y Carne"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 12</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Hamburguesa doble con tocineta.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Maicitos Gratinados con Chicharrón y Carne</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Cazuela abundante de maíz tierno salteado con trozos crujientes de chicharrón carnudo, cubos de carne a la parrilla, cebolla larga picada y queso fundido. Se sirve bien caliente con cascos de limón fresco para equilibrar cada bocado.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$33.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="13" data-category="Entradas">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_195533_894.png" class="menu-img" alt="Plato 13"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="13">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_195533_894.png" class="menu-img" alt="Parrillada de Vegetales y Queso Asado"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 13</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Entrada ligera y fresca.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Parrillada de Vegetales y Queso Asado</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Selección saludable de medallones de queso campesino dorados a la parrilla junto a espárragos verdes, rodajas de calabacín, pimentones asados y champiñones. Servido en sartén de hierro con chimichurri de la casa y cascos de limón.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$15.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="14" data-category="Bebidas">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_195535_833.png" class="menu-img" alt="Plato 14"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="14">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_195535_833.png" class="menu-img" alt="Arepas de Chocolo Rellenas de Queso Fundido"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 14</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Bebida tropical.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Arepas de Chocolo Rellenas de Queso Fundido</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Dos arepas doradas de maíz dulce recién asadas, rellenas de abundante queso doble crema derretido que se estira al partirlas. Coronadas con pico de gallo fresco de tomate y cilantro, acompañadas de guacamole artesanal y tajadas de aguacate.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$8.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="15" data-category="Platos fuertes">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_195538_822.png" class="menu-img" alt="Plato 15"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="15">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_195538_822.png" class="menu-img" alt="Cazuela de Frijoles Colombianos con Maduro"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 15</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Plato familiar para compartir.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Cazuela de Frijoles Colombianos con Maduro</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Frijoles rojos cargamanto cocidos a fuego lento hasta lograr una textura cremosa, perfumados con cilantro fresco picado. Se sirven acompañados de arroz blanco suelto, tajadas de plátano maduro frito, aguacate en láminas, arepa asada y limón.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$55.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="16" data-category="Carnes">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_201015_696.png" class="menu-img" alt="Plato 16"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="16">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_201015_696.png" class="menu-img" alt="Old Fashioned Ahumado de la Casa"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 16</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Corte jugoso con papas a la francesa.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Old Fashioned Ahumado de la Casa</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Cóctel clásico de autor preparado con whisky, amargo aromático y un toque cítrico, servido sobre un cubo grande de hielo cristalino. Decorado con piel de naranja fresca y una astilla de canela flameada que aporta notas ahumadas.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$36.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="17" data-category="Ensaladas">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_201016_930.png" class="menu-img" alt="Plato 17"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="17">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_201016_930.png" class="menu-img" alt="Limonada Refrescante de Maracuyá"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 17</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Ensalada fresca con aderezo de la casa.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Limonada Refrescante de Maracuyá</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Bebida fría y vibrante elaborada con pulpa natural de maracuyá con sus semillas, jugo de limón recién exprimido y abundante hielo picado. Decorada con rodajas de limón fresco y hojas de hierbabuena aromática.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$16.000</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 col-sm-6">
-          <div class="menu-item-card card-dark h-100" data-id="18" data-category="Bebidas">
-            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_201019_218.png" class="menu-img" alt="Plato 18"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
+          <div class="menu-item-card card-dark h-100" data-id="18">
+            <div class="menu-img-wrap"><img src="assets/menu/IMG_20261027_201019_218.png" class="menu-img" alt="Trío de Coctelería y Bebidas Frías"><span class="menu-hover-badge">Ver detalle y ordenar</span></div>
             <div class="card-body">
-              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Plato 18</h5>
-              <p class="item-desc card-text" style="color: var(--texto-mutado);">Bebida gaseosa fría.</p>
+              <h5 class="item-title card-title" style="color: var(--oro-viejo);">Trío de Coctelería y Bebidas Frías</h5>
+              <p class="item-desc card-text" style="color: var(--texto-mutado);">Variedad de bebidas refrescantes ideales para acompañar la parrilla: cóctel rosado de frutos rojos con hierbabuena en copa alta, bebida cítrica de mango o maracuyá y trago corto oscuro sobre hielo con twist de limón.</p>
               <p class="item-price mb-0" style="color: var(--texto-claro); font-weight:600;">$6.000</p>
             </div>
           </div>
@@ -252,7 +249,6 @@
     </div>
   </section>
 
-  <!-- Modal vista rápida -->
   <div class="modal fade" id="quickViewModal" tabindex="-1" aria-labelledby="qvTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content modal-menu">
@@ -279,49 +275,5 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="sesion.js"></script>
   <script src="menu.js"></script>
-  <script>
-    (function(){
-      const tarjetas = Array.from(document.querySelectorAll('.menu-item-card'));
-      const originales = tarjetas.map(function (card) {
-        return {
-          nombre: (card.querySelector('.item-title') || {}).textContent || '',
-          desc: (card.querySelector('.item-desc') || {}).textContent || '',
-          precio: (card.querySelector('.item-price') || {}).textContent || '',
-          alt: (card.querySelector('img') || {}).alt || ''
-        };
-      });
-
-      function aplicarMenu() {
-        let saved = [];
-        try { saved = JSON.parse(localStorage.getItem('orearte_menu') || '[]'); } catch (e) { saved = []; }
-        if (!Array.isArray(saved)) saved = [];
-        tarjetas.forEach(function (card, idx) {
-          const base = originales[idx];
-          const s = saved.find(function (item) { return item && item.id === idx + 1; }) || {};
-          const nombre = s.nombre || base.nombre;
-          const desc = s.desc || base.desc;
-          let precio = base.precio;
-          if (s.precio) {
-            const num = parseInt(String(s.precio).replace(/[^0-9]/g, ''), 10);
-            precio = isNaN(num) ? ('Precio: ' + s.precio) : ('$' + num.toLocaleString('es-CO'));
-          }
-          const titleEl = card.querySelector('.item-title');
-          if (titleEl) titleEl.textContent = nombre;
-          const descEl = card.querySelector('.item-desc');
-          if (descEl) descEl.textContent = desc;
-          const priceEl = card.querySelector('.item-price');
-          if (priceEl) priceEl.textContent = precio;
-          const img = card.querySelector('img');
-          if (img) img.alt = nombre;
-        });
-      }
-
-      aplicarMenu();
-
-      window.addEventListener('storage', function (e) {
-        if (e.key === 'orearte_menu' || e.key === null) aplicarMenu();
-      });
-    })();
-  </script>
 </body>
 </html>
